@@ -1,0 +1,30 @@
+{
+  "name": "stage-book-what-you-want",
+  "private": true,
+  "scripts": {
+    "start": "meteor run",
+    "test": "meteor test --once --driver-package meteortesting:mocha",
+    "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+    "visualize": "meteor --production --extra-packages bundle-visualizer"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.15.4",
+    "@mdi/font": "^6.4.95",
+    "meteor-node-stubs": "^1.1.0",
+    "vue": "^2.6.14",
+    "vue-meteor-tracker": "^2.0.0-beta.5",
+    "vue-router": "^3.5.3",
+    "vuetify": "^2.5.14"
+  },
+  "meteor": {
+    "mainModule": {
+      "client": "client/main.js",
+      "server": "server/main.js"
+    }
+  },
+  "devDependencies": {
+    "deepmerge": "^4.2.2",
+    "sass": "^1.32.13",
+    "sass-loader": "^12.3.0"
+  }
+}
