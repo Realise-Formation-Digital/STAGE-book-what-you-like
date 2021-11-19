@@ -21,6 +21,9 @@
       <v-btn icon to="/contact-us">
         <v-icon>mdi-card-account-mail</v-icon>
       </v-btn>
+      <v-btn icon to="/things">
+        <v-icon>mdi-tag-plus-outline</v-icon>
+      </v-btn>
     </v-app-bar>
 
     <Sidebar ref="sidebar"/>
