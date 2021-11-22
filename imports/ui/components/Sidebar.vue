@@ -31,6 +31,18 @@
           </v-list-item-icon>
           <v-list-item-title>Contact Us</v-list-item-title>
         </v-list-item>
+       <v-list-item link :to="paths.things">
+          <v-list-item-icon> 
+            <v-icon>mdi-tag-plus-outline</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Things</v-list-item-title>
+        </v-list-item>
+        <v-list-item link :to="paths.user">
+          <v-list-item-icon> 
+            <v-icon>mdi-account-plus</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>User</v-list-item-title>
+        </v-list-item>
       </v-list-item-group>
     </v-list>
   </v-navigation-drawer>
