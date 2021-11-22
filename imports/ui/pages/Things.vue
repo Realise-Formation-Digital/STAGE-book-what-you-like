@@ -1,5 +1,6 @@
 <template>
   <div align="left" justify="space-around">
+    <!-- Boutton qui affiche le dialogue  -->
     <v-btn x-large depressed class="btn-add" @click="onclickAdd()"> Add </v-btn>
 
     <v-card flat>
@@ -17,7 +18,7 @@
       <v-data-table
         class="margin-left margin-right"
         :headers="headers"
-        :items="desserts"
+        :items="reservable"
         :search="search"
       ></v-data-table>
     </v-card>
@@ -34,7 +35,7 @@
                 <v-row>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
-                      v-model="name"
+                      v-model="form.name"
                       :rules="nameRules"
                       label="Name"
                       required
@@ -42,7 +43,7 @@
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
-                      v-model="descriptions"
+                      v-model="form.descriptions"
                       :rules="descriptionsRules"
                       label="Descriptions"
                       required
@@ -50,7 +51,7 @@
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
-                      v-model="serialnumber"
+                      v-model="form.serialnumber"
                       :rules="serialnumberRules"
                       label="SerialNumber"
                       required
@@ -58,7 +59,7 @@
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
-                      v-model="categoryid"
+                      v-model="form.categoryid"
                       :rules="categoryidRules"
                       label="CategoryId"
                       required
@@ -82,8 +83,8 @@
               </v-btn>
               <v-btn color="error" class="mr-4" @click="reset">
                 Reset Form
-              </v-btn> </v-card-actions
-            >
+              </v-btn>
+            </v-card-actions>
           </v-form>
         </v-card>
       </v-dialog>
@@ -100,6 +101,12 @@ export default {
       dialog: false,
       showAdd: false,
       search: "",
+      form: {
+        name: null,
+        descriptions: null,
+        serialnumber: null,
+        categoryid: null,
+      },
       headers: [
         {
           text: "Name",
@@ -112,7 +119,8 @@ export default {
         { text: "Reserved ", value: "reserved" },
         { text: "CategoryId", value: "categoryid" },
       ],
-      desserts: [
+      // Les reservables
+      reservable: [
         {
           name: "",
           serialnumber: "",
@@ -209,11 +217,11 @@ export default {
     reset() {
       this.$refs.form.reset();
     },
-     async handleSubmit () {
-     alert(JSON.stringify(this.v-model));
-     console.log(this.v-model);
+    async handleSubmit() {
+      alert(JSON.stringify(this.form));
+      console.log(this.form);
+    },
   },
-}
 };
 </script>
 
