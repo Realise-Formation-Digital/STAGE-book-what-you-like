@@ -27,7 +27,7 @@ Meteor.methods({
 
             console.log(_id)
 
-            //result = ReservationsModel.removeReservation(_id)
+            result = ReservationsModel.removeReservation(_id)
 
             return result
         } catch (e) {
@@ -42,7 +42,7 @@ Meteor.methods({
 
             console.log(_id, userName, timestampFrom, timestampTo)
 
-            //result = ResrvationsModel.updateReservation(_id,userName, timestampFrom, timestampTo)
+            result = ResrvationsModel.updateReservation(_id,userName, timestampFrom, timestampTo)
 
             return result
         } catch (e) {
