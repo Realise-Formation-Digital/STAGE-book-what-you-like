@@ -21,6 +21,12 @@ Meteor.methods({
         }
     },
     //create method to delete Category
+
+    /**
+     * 
+     * @param {string} _id 
+     * @returns 
+     */
     async removeCategory(_id) {
         try {
             let result = null
