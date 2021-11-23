@@ -1,7 +1,7 @@
 <template>
   <div align="left" justify="space-around">
     <!-- Boutton qui affiche le dialogue  -->
-    <v-btn x-large depressed class="btn-add" handleSubmit @click="onclickAdd()">
+    <v-btn x-large depressed class="btn-add"  @click="onclickAdd()">
       Add User
     </v-btn>
 
@@ -24,11 +24,11 @@
         :search="search"
       >
         <template v-slot:item.action="{ item }">
-          <v-btn bouttonAction icon color="dark" @click="bouttonAction(item)">
-            <v-icon>mdi-lead-pencil</v-icon>
-          </v-btn>
           <v-btn icon color="red" @click="bouttonAction(item)">
             <v-icon>mdi-delete</v-icon>
+          </v-btn>
+          <v-btn bouttonAction icon color="dark" @click="bouttonAction(item)">
+            <v-icon>mdi-lead-pencil</v-icon>
           </v-btn>
         </template>
       </v-data-table>
@@ -97,11 +97,23 @@
           </v-form>
         </v-card>
       </v-dialog>
+      <v-dialog v-model="showMessageError" max-width="600px">
+        <v-card>
+          <v-card-text>Error</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="error" class="mr-4" @click="hideDialogError()">
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-row>
   </div>
 </template>
 
 <script>
+import UserService from '../services/userService.js'
 export default {
   name: "User",
 
@@ -215,11 +227,57 @@ export default {
     reset() {
       this.$refs.form.reset();
     },
-    // Console log pour la form
-    async handleSubmit() {
-      alert(JSON.stringify(this.form));
-      console.log(this.form);
+    // Console log pour le service
+    showDialogError() {
+      this.showMessageError = true;
     },
+    hideDialogError() {
+      this.showMessageError = false;
+    },
+
+    /**
+     *
+     */
+    async insertUser() {
+      try {
+        alert(JSON.stringify(this.form));
+        await UserService.insertUser();
+        console.log(this.form);
+      } catch (e) {
+        console.error(
+          "[Component][User][insertUser] An error occurred when insert thing",
+          e
+        );
+        this.showDialogError();
+      }
+    },
+    async deleteThings() {
+      try {
+        alert(JSON.stringify(this.form));
+        await UserService.deleteUser();
+        console.log(this.form);
+      } catch (e) {
+        console.error(
+          "[Component][User][deleteUser] An error occurred when insert thing",
+          e
+        );
+        this.showDialogError();
+      }
+    },
+    async updateUser() {
+      try {
+        alert(JSON.stringify(this.form));
+        await UserService.updateUser();
+        console.log(this.form);
+      } catch (e) {
+        console.error(
+          "[Component][User][updateUser] An error occurred when insert thing",
+          e
+        );
+        this.showDialogError();
+      }
+    },
+
     //Console log pour les items
     async bouttonAction(item) {
       alert(JSON.stringify(item));

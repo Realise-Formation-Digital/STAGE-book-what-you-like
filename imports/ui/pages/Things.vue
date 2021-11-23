@@ -1,6 +1,6 @@
 <template>
   <div align="left" justify="space-around">
-    <!-- Boutton qui affiche le dialogue  -->
+    <!-- Boutton qui affiche le dialogue ajouter -->
     <v-btn x-large depressed class="btn-add" @click="onclickAdd()"> Add </v-btn>
 
     <v-card flat>
@@ -22,7 +22,8 @@
         :search="search"
       >
         <template v-slot:item.action="{ item }">
-          <v-btn bouttonAction icon color="red" @click="bouttonAction(item)">
+          <!-- Deux boutton pour supression et modification -->
+          <v-btn icon color="red" @click="bouttonAction(item)">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
           <v-btn icon color="dark" @click="bouttonAction(item)">
@@ -36,7 +37,7 @@
     <v-row justify="center">
       <v-dialog v-model="showAdd" max-width="600px">
         <v-card>
-          <v-form ref="form" v-model="valid" lazy-validation handleSubmit>
+          <v-form ref="form" v-model="valid" lazy-validation>
             <v-card-title>
               <span class="text-h5">Add</span>
             </v-card-title>
@@ -98,11 +99,39 @@
           </v-form>
         </v-card>
       </v-dialog>
+      <v-dialog v-model="showMessageError" max-width="600px">
+        <v-card>
+          <v-card-text>Error</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="error" class="mr-4" @click="hideDialogError()">
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- Dialogue pour confirmation de supression -->
+      <v-dialog v-model="showMessageDelete" max-width="600px">
+        <v-card>
+          <v-card-text>Are you sure to delete {{selectedThingToDelete && selectedThingToDelete.name}}?</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="error" class="mr-4" @click="deleteThings()">
+              Yes
+            </v-btn>
+            <v-btn color="error" class="mr-4" @click="hideDeleteDialog()">
+              No
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-row>
   </div>
 </template>
 
 <script>
+import ThingsService from "../services/thingsService.js";
 export default {
   name: "Things",
 
@@ -110,6 +139,9 @@ export default {
     return {
       dialog: false,
       showAdd: false,
+      showMessageError: false,
+      showMessageDelete: false,
+      selectedThingToDelete: null,
       search: "",
       form: {
         name: null,
@@ -133,11 +165,11 @@ export default {
       // Les reservables
       reservable: [
         {
-          name: "",
-          serialnumber: "",
-          descriptions: " ",
-          reserved: "",
-          categoryid: "",
+          name: "Davide",
+          serialnumber: "1213",
+          descriptions: " asdbhasda",
+          reserved: "no",
+          categoryid: "234",
         },
         {
           name: "",
@@ -217,25 +249,84 @@ export default {
   },
 
   methods: {
+
+    showDeleteDialog(){
+      this.showMessageDelete = true
+    },
+
+    hideDeleteDialog(){
+      this.showMessageDelete = false
+    },
+
     onclickAdd() {
       this.showAdd = !this.showAdd;
     },
     // Validation de l'ajout d'un réservable
-    validate() {
-      this.$refs.form.validate();
+    async validate() {
+      try {
+        this.$refs.form.validate();
+        await this.insertThings();
+      } catch (e) {
+        console.error("[Component][validate]", e);
+      }
     },
     // Reset les champs pendant l'ajout d'un réservable
     reset() {
       this.$refs.form.reset();
     },
-    async handleSubmit() {
-      alert(JSON.stringify(this.form));
-      console.log(this.form);
+    // Dialog pour les ereurs services
+    showDialogError() {
+      this.showMessageError = true;
     },
+    hideDialogError() {
+      this.showMessageError = false;
+    },
+    async insertThings() {
+      console.log("[Component][insertThing]");
+      try {
+        alert(JSON.stringify(this.form));
+        await ThingsService.insertThings();
+        console.log(this.form);
+      } catch (e) {
+        console.error(
+          "[Component][Things][insertThings] An error occurred when insert thing",
+          e
+        );
+        this.showDialogError();
+      }
+    },
+    async deleteThings() {
+      try {
+        if (this.selectedThingToDelete) {
+          await ThingsService.deleteThings(this.selectedThingToDelete.id);
+        }
+      } catch (e) {
+        console.error(
+          "[Component][Things][deleteThings] An error occurred when insert thing",
+          e
+        );
+        this.showDialogError();
+      }
+    },
+    async updateThings() {
+      try {
+        await ThingsService.updateThings();
+        console.log(this.form);
+      } catch (e) {
+        console.error(
+          "[Component][Things][updateThings] An error occurred when insert thing",
+          e
+        );
+        this.showDialogError();
+      }
+    },
+
     //Console log pour les items
-    async bouttonAction(item) {
-      alert(JSON.stringify(item));
+    bouttonAction(item) {
+      //alert(JSON.stringify(item));
       console.log(item);
+      this.selectedThingToDelete = item
+      this.showDeleteDialog()
     },
   },
 };
