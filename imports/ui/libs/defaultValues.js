@@ -1,7 +1,10 @@
 const paths = {
   home: "/",
   contactUs: "/contact-us",
-  aboutUs: "/about-us"
+  aboutUs: "/about-us",
+  category: '/category',
+  reservation: '/reservation',
+  
 }
 
 const meteorMethods = {

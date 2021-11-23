@@ -8,13 +8,14 @@
     "visualize": "meteor --production --extra-packages bundle-visualizer"
   },
   "dependencies": {
-    "@babel/runtime": "^7.15.4",
+    "@babel/runtime": "^7.16.3",
     "@mdi/font": "^6.4.95",
     "meteor-node-stubs": "^1.1.0",
     "vue": "^2.6.14",
     "vue-meteor-tracker": "^2.0.0-beta.5",
+    "vue-template-compiler": "^2.1.8",
     "vue-router": "^3.5.3",
-    "vuetify": "^2.5.14"
+    "vuetify": "^2.6.0"
   },
   "meteor": {
     "mainModule": {

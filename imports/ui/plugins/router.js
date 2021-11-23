@@ -3,7 +3,9 @@ import VueRouter from 'vue-router'
 import Home from "../pages/Home";
 import AboutUs from "../pages/AboutUs";
 import ContactUs from "../pages/ContactUs";
-import {paths} from "../libs/defaultValues";
+import Category from "../pages/Category";
+import Reservation from "../pages/Reservation";
+import { paths } from "../libs/defaultValues";
 Vue.use(VueRouter)
 
 const routes = [
@@ -15,7 +17,14 @@ const routes = [
   },
   {
     path: paths.contactUs, component: ContactUs, name: 'Contact Us'
-  }
+  },
+  {
+    path: paths.category, component: Category, name: 'Category'
+  },
+  {
+    path: paths.reservation, component: Reservation, name: 'Reservation'
+  },
+
 ]
 
 export default new VueRouter({
