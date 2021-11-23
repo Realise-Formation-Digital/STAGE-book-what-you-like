@@ -24,6 +24,9 @@
           :items-per-page="5"
           class="elevation-1"
         >
+          <div class="mb-6">
+            Active picker: <code>{{ activePicker || "null" }}</code>
+          </div>
           <template v-slot:item.actions="{ item }">
             <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
           </template>
@@ -72,27 +75,79 @@
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
-                      v-model="form.from"
+                      v-model="form.category"
                       label="category*"
                       type="category"
                       required
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
-                    <v-text-field
-                      v-model="form.to"
-                      label="from*"
-                      type="from"
-                      required
-                    ></v-text-field>
+                    <v-menu
+                      ref="menu"
+                      v-model="menu"
+                      :close-on-content-click="false"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="date"
+                          label="From"
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                        v-model="date"
+                        :active-picker.sync="activePicker"
+                        :max="
+                          new Date(
+                            Date.now() - new Date().getTimezoneOffset() * 60000
+                          )
+                            .toISOString()
+                            .substr(0, 10)
+                        "
+                        min="1950-01-01"
+                        @change="save"
+                      ></v-date-picker>
+                    </v-menu>
                   </v-col>
                   <v-col cols="12">
-                    <v-text-field
-                      v-model="form.to"
-                      label="to*"
-                      type="to"
-                      required
-                    ></v-text-field>
+                    <v-menu
+                      ref="menu"
+                      v-model="menu"
+                      :close-on-content-click="false"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="date"
+                          label="To"
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                        v-model="date"
+                        :active-picker.sync="activePicker"
+                        :max="
+                          new Date(
+                            Date.now() - new Date().getTimezoneOffset() * 60000
+                          )
+                            .toISOString()
+                            .substr(0, 10)
+                        "
+                        min="1950-01-01"
+                        @change="save"
+                      ></v-date-picker>
+                    </v-menu>
                   </v-col>
 
                   <v-col cols="12" sm="6"> </v-col>
@@ -120,10 +175,20 @@ export default {
       dialog: false,
       dialogDelete: false,
       actions: false,
+      activePicker: null,
+      date: null,
+      menu: false,
       form: {
         from: null,
         to: null,
       },
+      
+
+    watch: {
+      menu (val) {
+        val && setTimeout(() => (this.activePicker = 'YEAR'))
+      },
+    },
       rules: {
         required: (value) => !!value || "Required.",
         counter: (value) => value.length <= 5 || "Max 5 characters",
@@ -204,6 +269,9 @@ export default {
       console.log("Test", this.form);
       this.hideDialog();
     },
+    save (date) {
+        this.$refs.menu.save(date)
+      },
   },
 };
 </script>
