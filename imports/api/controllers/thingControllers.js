@@ -11,7 +11,7 @@ Meteor.methods({
 
             console.log(name, description, reserved, serial_number, parkingType = null, hasCable, hasWhiteBoard, timestamp)
 
-            //result = ThingsModel.insertThing(name, description , reserved, serial_number, parkingType = null, hasCable, hasWhiteBoard, timestamp)
+            result = ThingModel.insertThing(name, description , reserved, serial_number, parkingType = null, hasCable, hasWhiteBoard, timestamp)
 
             return result
 
@@ -20,14 +20,20 @@ Meteor.methods({
             throw new Meteor.Error(e.error, e.reason, e.details)
         }
     },
-    //create method to delete thing
+
+    /**
+     * 
+     * @param {string} _id 
+     * @returns 
+     */
     async removeThing(_id) {
         try {
             let result = null
 
             console.log(_id)
 
-            //result = ThingsModel.removeThing(_id)
+            
+            result = ThingModel.removeThing(_id)
 
             return result
         } catch (e) {
@@ -42,7 +48,7 @@ Meteor.methods({
 
             console.log(_id, name, description, reserved, serial_number, parkingType = null, hasCable, hasWhiteBoard, timestamp)
 
-            //result = ThingsModel.updateThing(name, description , reserved, serial_number, parkingType = null, hasCable, hasWhiteBoard, timestamp)
+            result = ThingModel.updateThing(name, description , reserved, serial_number, parkingType = null, hasCable, hasWhiteBoard, timestamp)
 
             return result
         } catch (e) {
