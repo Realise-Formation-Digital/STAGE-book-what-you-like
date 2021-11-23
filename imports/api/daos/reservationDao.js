@@ -5,8 +5,8 @@ class ReservationDao {
   /**
    * Insert Reservation
    * @param name {string} - title of the Reservation
-   * @param timestampFrom {number} - number start reservation
-   * @param timestampTo {number} - number end of reservation
+   * @param tsFrom {number} - number start reservation
+   * @param tsTo {number} - number end of reservation
    * @returns {Promise<any>}
    */
   static async insertReservation(name, timestampFrom, timestampTo){

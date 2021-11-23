@@ -11,7 +11,7 @@ class CategoryDao {
   static async insertCategory(title, date){
     console.log('[CategoryDao][insertCategory] Inserting category with params', title, date)
     try {
-      return LinksCollection.insert({
+      return CategoriesCollection.insert({
         title: title,
         date: date
       })

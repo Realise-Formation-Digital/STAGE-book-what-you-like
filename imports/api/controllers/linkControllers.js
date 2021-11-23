@@ -8,7 +8,7 @@ import LinksModel from "../models/linksModel";
 
 Meteor.methods({
 
-  async createLink(title, url) {
+  async insertLink(title, url) {
     try {
       check(url, String);
       check(title, String);
