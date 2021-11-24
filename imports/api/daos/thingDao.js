@@ -62,7 +62,7 @@ class ThingDao {
         imgId: imgId,
         reserved: reserved,
         serial_number: serial_number,
-        categoryId: categoryId,
+        
         parkingType: parkingType,
         hasCable: hasCable,
         hasWhiteBoard: hasWhiteBoard,
