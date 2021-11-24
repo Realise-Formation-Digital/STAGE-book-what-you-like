@@ -21,7 +21,7 @@ Meteor.methods({
         }
     },
 
-    /**
+    /** method to delete category
      * 
      * @param {string} _id 
      * @returns 

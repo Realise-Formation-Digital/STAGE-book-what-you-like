@@ -31,6 +31,36 @@ class ThingsModel {
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   }
+  /**remove thing
+   * @param {string} _id
+   * @returns
+   */
+   static async removeThing (_id) {
+    try {
+      let result = null
+
+      result = await ThingDao.removeThing(_id)
+
+      return result
+    }catch (e) {
+      console.error('[ThingsModel][removeThing] An error occurred when removing thing', e)
+      throw new Meteor.Error(e.error, e.reason, e.details)
 }
+   }
+/**update the thing */
+   static async updateThing (name, description , reserved, serialNumber, parkingType = null, hasCable, hasWhiteBoard, timestamp) {
+    try {
+      let result = null
+
+      result = await ThingDao.insertThing(name, description , reserved, serialNumber, parkingType = null, hasCable, hasWhiteBoard, timestamp)
+
+      return result
+    }catch (e) {
+      console.error('[ThingsModel][updateThing] An error occurred when update thing', e)
+      throw new Meteor.Error(e.error, e.reason, e.details)
+    }
+  }
+  
+  }
 
 export default ThingsModel
