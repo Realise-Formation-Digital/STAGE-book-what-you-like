@@ -2,7 +2,7 @@
   <v-container>
     <v-app>
       <v-main>
-        <v-btn @click="showDialog()">save</v-btn>
+        <v-btn @click="showInsertDialog()">save</v-btn>
 
         <v-row class="text-right">
           <v-col md="6"></v-col>
@@ -28,7 +28,9 @@
             Active picker: <code>{{ activePicker || "null" }}</code>
           </div>
           <template v-slot:item.actions="{ item }">
-            <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+            <v-icon small @click="selectItemToDeleteAndOpenDialog(item)">
+              mdi-delete
+            </v-icon>
           </template>
         </v-data-table>
 
@@ -40,10 +42,13 @@
             >
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete()"
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="closeDialogAndCleanVariables()"
                 >Cancel</v-btn
               >
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm()"
+              <v-btn color="blue darken-1" text @click="deleteSelectedItem()"
                 >OK</v-btn
               >
               <v-spacer></v-spacer>
@@ -51,7 +56,7 @@
           </v-card>
         </v-dialog>
 
-        <v-dialog v-model="dialog" max-width="600px">
+        <v-dialog v-model="insertDialog" max-width="600px">
           <v-card>
             <v-card-title class="text-h5"> add something </v-card-title>
 
@@ -60,7 +65,7 @@
                 <v-row>
                   <v-col cols="12">
                     <v-text-field
-                      v-model="form.name"
+                      v-model="form.thinks"
                       label="things*"
                       required
                     ></v-text-field>
@@ -156,7 +161,18 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="checkForm()">
+              <v-btn
+                color="green darken-1"
+                text
+                @click="insertClearReservation()"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                color="green darken-1"
+                text
+                @click="insertSaveReservation()"
+              >
                 Agree
               </v-btn>
             </v-card-actions>
@@ -167,12 +183,13 @@
   </v-container>
 </template>
 <script>
+import ReservationService from "../services/reservationService.js";
 export default {
   name: "Reservation",
   data: () => {
     return {
       search: "",
-      dialog: false,
+      insertDialog: false,
       dialogDelete: false,
       actions: false,
       activePicker: null,
@@ -181,14 +198,16 @@ export default {
       form: {
         from: null,
         to: null,
+        thinks: null,
+        user: null,
+        category: null,
       },
-      
 
-    watch: {
-      menu (val) {
-        val && setTimeout(() => (this.activePicker = 'YEAR'))
+      watch: {
+        menu(val) {
+          val && setTimeout(() => (this.activePicker = "YEAR"));
+        },
       },
-    },
       rules: {
         required: (value) => !!value || "Required.",
         counter: (value) => value.length <= 5 || "Max 5 characters",
@@ -234,18 +253,7 @@ export default {
     };
   },
   methods: {
-    async showDialog() {
-      this.dialog = true;
-      this.$refs.form.validate();
-    },
-    deleteItem(itemToDelete) {
-      this.itemToDelete = itemToDelete;
-      this.dialogDelete = true;
-    },
-
-    hideDialog() {
-      this.dialog = false;
-    },
+  
 
     customError() {
       this.nameErrorCount = 3;
@@ -256,24 +264,96 @@ export default {
       alert(JSON.stringify(item));
       console.log(item);
     },
-    closeDelete(item) {
+
+    /*
+    INSERT SECTION
+    */
+
+    showInsertDialog() {
+      this.insertDialog = true;
+    },
+
+    hideInsertDialog() {
+      this.insertDialog = false;
+      this.form = {
+        from: null,
+        to: null,
+        thinks: null,
+        user: null,
+        category: null,
+      };
+    },
+    insertClearReservation() {
+      this.insertDialog = false;
+      this.form = {
+        from: null,
+        to: null,
+        thinks: null,
+        user: null,
+        category: null,
+      };
+    },
+    insertSaveReservation() {
+      this.insertDialog = false;
+      this.form = {
+        from: null,
+        to: null,
+        thinks: null,
+        user: null,
+        category: null,
+      };
+    },
+
+    async insertReservation() {
+      try {
+        console.log("Test", this.form);
+        await ReservationService.insertReservation(
+          this.form.from,
+          this.form.to,
+          this.form.thinks,
+          this.form.user,
+          this.form.category
+        );
+        this.hideInsertDialog();
+      } catch (e) {
+        console.error(
+          "[Component][Reservation][insertSaveReservation] An error occurred when inert reservation",
+          e
+        );
+      }
+    },
+    save(date) {
+      this.$refs.menu.save(date);
+    },
+
+    /*
+    DELETE SECTION
+    */
+
+    selectItemToDeleteAndOpenDialog(itemToDelete) {
+      this.itemToDelete = itemToDelete;
+      this.dialogDelete = true;
+    },
+
+    closeDialogAndCleanVariables() {
       this.dialogDelete = false;
       this.itemToDelete = null;
-      console.log(item);
     },
-    deleteItemConfirm() {
-      console.log("Test", this.itemToDelete);
-      this.dialogDelete = false;
+
+    async deleteSelectedItem() {
+      try {
+        console.log("Test", this.itemToDelete);
+        await ReservationService.insertReservation(this.itemToDelete.id);
+        this.closeDialogAndCleanVariables();
+      } catch (e) {
+        console.error(
+          "[Component][Reservation][deleteSelectedItem] An error occurred when inert reservation",
+          e
+        );
+      }
     },
-    checkForm() {
-      console.log("Test", this.form);
-      this.hideDialog();
-    },
-    save (date) {
-        this.$refs.menu.save(date)
-      },
   },
 };
 </script>
-<style scoped>
+<style>
 </style>

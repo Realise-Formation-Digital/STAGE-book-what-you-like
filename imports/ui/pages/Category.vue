@@ -2,7 +2,7 @@
   <v-container>
     <v-app>
       <v-main>
-        <v-btn @click="showDialog()">save</v-btn>
+        <v-btn @click="showInsertDialog()">save</v-btn>
 
         <v-row class="text-right">
           <v-col md="6"></v-col>
@@ -23,9 +23,9 @@
           :search="search"
           :items-per-page="5"
           class="elevation-1"
-        > 
-        <template v-slot:item.actions="{ item }">
-            <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+        >
+          <template v-slot:item.actions="{ item }">
+            <v-icon small @click="selectItemToDeleteAndOpenDialog(item)"> mdi-delete </v-icon>
           </template>
         </v-data-table>
 
@@ -37,20 +37,21 @@
             >
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete()"
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="closeDialogAndCleanVariables()"
                 >Cancel</v-btn
               >
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm()"
+              <v-btn color="blue darken-1" text @click="deleteSelectedItem()"
                 >OK</v-btn
               >
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
         </v-dialog>
-        
-      
 
-        <v-dialog v-model="dialog" max-width="600px">
+        <v-dialog v-model="insertDialog" max-width="600px">
           <v-card>
             <v-card-title class="text-h5"> add something </v-card-title>
 
@@ -67,7 +68,7 @@
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
-                     v-model="form.desciption"
+                      v-model="form.desciption"
                       label="Desciption*"
                       type="desciption"
                       required
@@ -80,7 +81,18 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="checkForm()">
+              <v-btn
+                color="green darken-1"
+                text
+                @click="insertCleanCategory()"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                color="green darken-1"
+                text
+                @click="insertSaveCategory()"
+              >
                 Agree
               </v-btn>
             </v-card-actions>
@@ -91,12 +103,14 @@
   </v-container>
 </template>
 <script>
+import CategoryService from "../services/categoryService.js";
 export default {
   data() {
     return {
       search: "",
-      dialog: false,
+     insertDialog : false,
       dialogDelete: false,
+      actions: false,
       form: {
         name: null,
         description: null,
@@ -134,18 +148,6 @@ export default {
     };
   },
   methods: {
-    async showDialog() {
-      this.dialog = true;
-      
-    },
-    deleteItem(itemToDelete) {
-      this.itemToDelete = itemToDelete;
-      this.dialogDelete = true;
-    },
-
-    hideDialog() {
-      this.dialog = false;
-    },
     customError() {
       this.nameErrorCount = 3;
       this.nameErrorDescription = ["this field has error"];
@@ -154,23 +156,85 @@ export default {
       alert(JSON.stringify(item));
       console.log(item);
     },
-    closeDelete(item) {
+    showInsertDialog() {
+      this.insertDialog = true;
+    },
+    /*
+    INSERT SECTION
+    */
+    hideInsertDialog() {
+      this.insertDialog = false;
+      this.form = {
+        name: null,
+        description: null,
+      };
+    },
+
+    
+   
+    insertCleanCategory() {
+      this.insertDialog = false;
+      this.form = {
+        name: null,
+        description: null,
+      };
+      
+    },
+    insertSaveCategory() {
+      this.insertDialog = false;
+      this.form = {
+        name: null,
+        description: null,
+      };
+    },
+
+    async insertCategory() {
+      try {
+        console.log("Test", this.form);
+        await CategoryService.insertCategory(
+          this.form.name,
+          this.form.description,
+        );
+         this.hideInsertDialog();
+      } catch (e) {
+        console.error(
+          "[Component][Category][insertCategory] An error occurred when inert category",
+          e
+        );
+      }
+    },
+
+
+  /*
+    DELETE SECTION
+    */
+  
+    selectItemToDeleteAndOpenDialog(itemToDelete) {
+      this.itemToDelete = itemToDelete;
+      this.dialogDelete = true;
+    },
+
+    closeDialogAndCleanVariables() {
       this.dialogDelete = false;
       this.itemToDelete = null;
-      console.log(item);
-    },
-    deleteItemConfirm() {
-      console.log("Test", this.itemToDelete);
-      this.dialogDelete = false;
     },
 
-    checkForm() {
-      console.log("Test", this.form);
-      this.hideDialog()
+    async deleteSelectedItem() {
+      try {
+        console.log("Test", this.itemToDelete);
+        await CategoryService.insertCategory(this.itemToDelete.id);
+        this.closeDialogAndCleanVariables();
+      } catch (e) {
+        console.error(
+          "[Component][Category][deleteSelectedItem] An error occurred when inert Category",
+          e
+        );
+      }
     },
+
   },
+
 };
 </script>
-<style scoped>
-
+<style >
 </style>
