@@ -38,12 +38,7 @@ class CategoryDao {
     }
   }
 
-  /**
-  * Modify Category
-  * @param title {string} - title of the link
-  * @param date {Date} - date of insertion
-  * @returns {Promise<any>}
-  */
+  /* Modify category */
   static async updateCategory(title, date) {
     console.log('[CategoryDao][updateCategory] Updating category with params', title, date)
     try {

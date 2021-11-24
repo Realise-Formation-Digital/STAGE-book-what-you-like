@@ -35,7 +35,7 @@ class LinkDao {
       })
     } catch (e) {
       console.error('[LinkDao][removeLink] An error occurred when removing link in database', e)
-      throw new Meteor.Error('0001', 'An error occurred in dao when inserting link', e.detail)
+      throw new Meteor.Error('0001', 'An error occurred in dao when removing link', e.detail)
     }
   }
 
