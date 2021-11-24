@@ -6,61 +6,60 @@ import ThingDao from "../daos/thingDao";
  * @author Schuster Lionel
  */
 class ThingsModel {
-    /**
-    * @param name {string} - title of the thing
-    * @param description {string} - description  of the thing
-    * @param imageId {string} - image of the thing
-    * @param reserved {Boolean} - if the thing is reserved or not
-    * @param serial_number {string} - serial number of the thing
-    * @param categoryId {string} - categoryId of the thing
-    * @param parkingType {string} - if location is 
-    * @param hasCable {Boolean} - if the thing need a cable
-    * @param hasWhiteBoard {Boolean} - if needed a whiteboard
-    * @param timestamp {number} - to calculate the time
-   * @returns {Promise<void>}
+  //todo comment
+
+  /**
+   * @param name {string} - title of the thing
+   * @param description {string} - description  of the thing
+   * @param reserved {Boolean} - if the thing is reserved or not
+   * @param serialNumber
+   * @param parkingType {string} - if location is
+   * @param hasCable {Boolean} - if the thing need a cable
+   * @param hasWhiteBoard {Boolean} - if needed a whiteboard
+   * @param ts
+   * @returns {Promise<*>}
    */
-  static async insertThing (name, description , reserved, serialNumber, parkingType = null, hasCable, hasWhiteBoard, timestamp) {
+  static async insertThing(name, description, reserved, serialNumber, parkingType, hasCable, hasWhiteBoard, ts) {
     try {
+      console.log('[Model][Things][insertThing] Inserting reservation with params', ame, description, reserved, serialNumber, parkingType, hasCable, hasWhiteBoard, ts)
       let result = null
-
-      result = ThingDao.insertThing(name, description , reserved, serialNumber, parkingType = null, hasCable, hasWhiteBoard, timestamp)
-
+      result = ThingDao.insertThing(name, description, reserved, serialNumber, parkingType, hasCable, hasWhiteBoard, ts)
       return result
-    }catch (e) {
-      console.error('[ThingsModel][insertThing] An error occurred when inserting thing', e)
+    } catch (e) {
+      console.error('[Model][Things][insertThing] An error occurred when inserting thing', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   }
-  /**remove thing
-   * @param {string} _id
+
+  /**
+   * Remove single thing
+   * @param {string} id
    * @returns
    */
-   static async removeThing (_id) {
+  static async removeThing(id) {
     try {
+      console.log('[Model][Things][removeThing] Removing thing with params', id)
       let result = null
-
-      result = await ThingDao.removeThing(_id)
-
+      result = await ThingDao.removeThing(id)
       return result
-    }catch (e) {
-      console.error('[ThingsModel][removeThing] An error occurred when removing thing', e)
+    } catch (e) {
+      console.error('[Model][Things][removeThing] An error occurred when removing thing', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
-}
-   }
-/**update the thing */
-   static async updateThing (name, description , reserved, serialNumber, parkingType = null, hasCable, hasWhiteBoard, timestamp) {
+    }
+  }
+
+  /**update the thing */
+  static async updateThing(name, description, reserved, serialNumber, parkingType = null, hasCable, hasWhiteBoard, timestamp) {
     try {
       let result = null
-
-      result = await ThingDao.insertThing(name, description , reserved, serialNumber, parkingType = null, hasCable, hasWhiteBoard, timestamp)
-
+      result = await ThingDao.insertThing(name, description, reserved, serialNumber, parkingType = null, hasCable, hasWhiteBoard, timestamp) // todo pour update on va inserir? XD
       return result
-    }catch (e) {
+    } catch (e) {
       console.error('[ThingsModel][updateThing] An error occurred when update thing', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   }
-  
-  }
+
+}
 
 export default ThingsModel
