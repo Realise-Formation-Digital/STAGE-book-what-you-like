@@ -9,49 +9,51 @@ class ReservationsModel {
 
   /**
    * Insert Reservation model
-   * @param title {string} - title of the reservation
-   * @param tsFrom {number} - timestampFrom the reservation
-   * @param tTo {number} - timestampTo the reservation
-   * @returns {Promise<void>}
+   * @param {string} userId - userid who did the action
+   * @param {string} thingId - thing id of thing to reserve
+   * @param {string} categoryId - category id of thing to reserve
+   * @param {string} title - title of the reservation
+   * @param {number} tsFrom  - ts from for the reservation
+   * @param {number} tsTo - ts to for the reservation
+   * @param {number} ts - ts to for the reservation
+   * @returns {Promise<*>}
    */
-  static async insertReservation (userId, title, tsFrom, tsTo) {
+  static async insertReservation(userId, thingId, categoryId, title, tsFrom, tsTo, ts) {
     try {
+      console.log('[Model][Reservation][insertReservation] Inserting reservation with params', userId, thingId, categoryId, title, tsFrom, tsTo)
       let result = null
-
-      result = ReservationDao.insertReservation(userId, title, tsFrom, tsTo)
-
+      result = ReservationDao.insertReservation(userId, thingId, categoryId, title, tsFrom, tsTo, ts)
       return result
-    }catch (e) {
-      console.error('[ReservationsModel][insertReservation] An error occurred when inserting reservation', e)
+    } catch (e) {
+      console.error('[Model][Reservation][insertReservation] An error occurred when inserting reservation', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   }
-/**delete reservation
- * 
- * @param {string} _id 
- * @returns 
- */
-  static async removeReservation (_id) {
+
+  /**
+   * Delete single reservation
+   * @param {string} id
+   * @returns {Promise<*>}
+   */
+  static async removeReservation(id) {
     try {
+      console.log('[Model][Reservation][removeReservation] Removing reservation with params', id)
       let result = null
-
-      result = await ReservationDao.removeReservation(_id)
-
+      result = await ReservationDao.removeReservation(id)
       return result
-    }catch (e) {
-      console.error('[ReservationsModel][removeReservation] An error occurred when removing reservation', e)
+    } catch (e) {
+      console.error('[Model][Reservation][removeReservation] An error occurred when removing reservation', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   }
-/* update the reservation*/
-  static async updateReservation (userId, title, tsFrom, tsTo) {
+
+  /* update the reservation*/
+  static async updateReservation(userId, title, tsFrom, tsTo) {
     try {
       let result = null
-
       result = await ReservationDao.updateReservation(userId, title, tsFrom, tsTo)
-
       return result
-    }catch (e) {
+    } catch (e) {
       console.error('[ReservationsModel][updateReservation] An error occurred when updating reservation', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
