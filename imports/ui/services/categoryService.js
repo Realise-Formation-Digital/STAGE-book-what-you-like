@@ -20,14 +20,7 @@ class CategoryService {
         }
     }
     
-    static async insertSaveCategory(id) {
-        try {
-            return meteorCall()
-        } catch (e) {
-            console.error('[Services][categoryService][insertSaveCategory] An error occurred when insert category', e)
-            throw new Meteor.Error(e.error, e.reason, e.details)
-        }
-    }
+   
 
 
 }
