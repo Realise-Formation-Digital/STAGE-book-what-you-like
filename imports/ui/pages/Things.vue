@@ -1,180 +1,216 @@
 <template>
-  <div align="left" justify="space-around">
-    <!-- Boutton qui affiche le dialogue ajouter -->
-    <v-btn x-large depressed class="btn-add" @click="onclickAdd()"> Add </v-btn>
 
-    <v-card flat>
-      <v-card-title>
-        <v-spacer></v-spacer>
+  <v-container>
+    <!-- button -->
+    <v-row>
+      <v-col>
+        <v-btn
+            large
+            rounded
+            class="green darken-1 white--text"
+            @click="showInsertDialog()">
+          <v-icon left>mdi-plus</v-icon>
+          Insert Thing
+        </v-btn>
+      </v-col>
+    </v-row>
+
+    <!-- search bar -->
+    <v-row>
+      <v-col></v-col>
+      <v-col>
         <v-text-field
-          class="search-padding"
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
+            class="search-padding"
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
         ></v-text-field>
-      </v-card-title>
-      <v-data-table
-        class="margin-left margin-right"
-        :headers="headers"
-        :items="reservable"
-        :search="search"
-      >
-        <template v-slot:item.action="{ item }">
-          <!-- Deux boutton pour supression et modification -->
-          <v-btn icon color="red" @click="bouttonAction(item)">
-            <v-icon>mdi-delete</v-icon>
-          </v-btn>
-          <v-btn icon color="dark" @click="bouttonActionUpdate(item)">
-            <v-icon>mdi-lead-pencil</v-icon>
-          </v-btn>
-        </template>
-        ></v-data-table
-      >
-    </v-card>
+      </v-col>
+    </v-row>
 
-    <v-row justify="center">
-      <v-dialog v-model="showAdd" max-width="600px">
-        <v-card>
-          <v-form ref="form" v-model="valid" lazy-validation>
-            <v-card-title>
-              <span class="text-h5">Add</span>
-            </v-card-title>
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
+    <!-- data-table -->
+    <v-row>
+      <v-col>
+        <v-data-table
+            class="margin-left margin-right"
+            :headers="headers"
+            :items="reservable"
+            :search="search"
+        >
+          <template v-slot:item.action="{ item }">
+            <!-- Deux boutton pour supression et modification -->
+            <v-btn icon color="red" @click="bouttonAction(item)">
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+            <v-btn icon color="dark" @click="bouttonActionUpdate(item)">
+              <v-icon>mdi-lead-pencil</v-icon>
+            </v-btn>
+          </template>
+          >
+        </v-data-table
+        >
+      </v-col>
+    </v-row>
+
+    <!-- dialogs -->
+    <!-- insert dialog -->
+    <v-dialog v-model="insertDialog" width="600px">
+      <v-card>
+        <v-form ref="insertForm" v-model="valid" lazy-validation>
+          <v-card-title>
+            <span class="text-h5">Insert new Thing</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col>
+                  <v-text-field
                       v-model="form.name"
-                      :rules="nameRules"
+                      :rules="rules.name"
                       label="Name"
                       required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="form.descriptions"
-                      :rules="descriptionsRules"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                      v-model="form.description"
+                      :rules="rules.description"
                       label="Descriptions"
                       required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="form.serialnumber"
-                      :rules="serialnumberRules"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                      v-model="form.serialNumber"
+                      :rules="rules.serialNumber"
                       label="SerialNumber"
                       required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="form.categoryid"
-                      :rules="categoryidRules"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                      v-model="form.categoryId"
+                      :rules="rules.categoryId"
                       label="CategoryId"
                       required
-                    ></v-text-field>
-                  </v-col>
-
-                  <v-col cols="12" sm="6"> </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-
-              <v-btn
-                :disabled="!valid"
-                color="success"
-                class="mr-4"
-                @click="validate"
-              >
-                Validate
-              </v-btn>
-              <v-btn color="error" class="mr-4" @click="reset">
-                Reset Form
-              </v-btn>
-            </v-card-actions>
-          </v-form>
-        </v-card>
-      </v-dialog>
-      <v-dialog v-model="showMessageError" max-width="600px">
-        <v-card>
-          <v-card-text>Error</v-card-text>
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="error" class="mr-4" @click="hideDialogError()">
-              Close
+            <v-btn
+                class="red darken-1 white--text"
+                large
+                rounded
+                @click="hideInsertDialog()"
+            >
+              <v-icon left>mdi-cancel</v-icon>
+              Cancel
+            </v-btn>
+            <v-btn
+                class="green darken-1 white--text"
+                large
+                rounded
+                @click="insertThings()"
+            >
+              <v-icon left>mdi-check</v-icon>
+              Insert
             </v-btn>
           </v-card-actions>
-        </v-card>
-      </v-dialog>
+        </v-form>
+      </v-card>
+    </v-dialog>
 
-      <!-- Dialogue pour confirmation de supression -->
-      <v-dialog v-model="showMessageDelete" max-width="600px">
-        <v-card>
-          <v-card-text
-            >Are you sure to delete
-            {{
-              selectedThingToDelete && selectedThingToDelete.name
-            }}?</v-card-text
-          >
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="error" class="mr-4" @click="deleteThings()">
-              Yes
-            </v-btn>
-            <v-btn color="error" class="mr-4" @click="hideDeleteDialog()">
-              No
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <!-- Dialogue pour confirmation de modification -->
-      <v-dialog v-model="showmessageUpdate" max-width="600px">
-        <v-card>
-          <v-card-text
-            >Are you sure to modify
-            {{
-              selectedThingToUpdate && selectedThingToUpdate.name
-            }}?</v-card-text
-          >
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="error" class="mr-4" @click="updateThings()">
-              Yes
-            </v-btn>
-            <v-btn color="error" class="mr-4" @click="hideUpdateDialog()">
-              No
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-row>
-  </div>
+    <!-- error dialog-->
+    <v-dialog v-model="showMessageError" max-width="600px">
+      <v-card>
+        <v-card-text>Error</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" class="mr-4" @click="hideDialogError()">
+            Close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- dialog selected item to delete -->
+    <v-dialog v-model="showMessageDelete" max-width="600px">
+      <v-card>
+        <v-card-text
+        >Are you sure to delete
+          {{
+            selectedThingToDelete && selectedThingToDelete.name
+          }}?
+        </v-card-text
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" class="mr-4" @click="deleteThings()">
+            Yes
+          </v-btn>
+          <v-btn color="error" class="mr-4" @click="hideDeleteDialog()">
+            No
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- dialog to update -->
+    <v-dialog v-model="showMessageUpdate" max-width="600px">
+      <v-card>
+        <v-card-text
+        >Are you sure to modify
+          {{
+            selectedThingToUpdate && selectedThingToUpdate.name
+          }}?
+        </v-card-text
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" class="mr-4" @click="updateThings()">
+            Yes
+          </v-btn>
+          <v-btn color="error" class="mr-4" @click="hideUpdateDialog()">
+            No
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 
 <script>
 import ThingsService from "../services/thingsService.js";
+
 export default {
   name: "Things",
 
   data() {
     return {
       dialog: false,
-      showAdd: false,
+      insertDialog: false,
       showMessageError: false,
       showMessageDelete: false,
-      showmessageUpdate: false,
+      showMessageUpdate: false,
       selectedThingToDelete: null,
       selectedThingToUpdate: null,
       search: "",
       form: {
         name: null,
-        descriptions: null,
-        serialnumber: null,
-        categoryid: null,
+        description: null,
+        serialNumber: null,
+        categoryId: null,
       },
       headers: [
         {
@@ -183,99 +219,78 @@ export default {
           sortable: false,
           value: "name",
         },
-        { text: "Serial Number", value: "serial number" },
-        { text: "Descriptions", value: "string" },
-        { text: "Reserved ", value: "reserved" },
-        { text: "CategoryId", value: "categoryid" },
-        { text: "Action ", value: "action" },
+        {text: "Serial Number", value: "serialNumber"},
+        {text: "Description", value: "description"},
+        {text: "Reserved ", value: "reserved"},
+        {text: "CategoryId", value: "categoryId"},
+        {text: "Action ", value: "action"},
       ],
       // Les reservables
       reservable: [
         {
           name: "Davide",
           serialnumber: "1213",
-          descriptions: " asdbhasda",
+          description: " asdbhasda",
           reserved: "no",
           categoryid: "234",
         },
         {
           name: "",
           serialnumber: "",
-          descriptions: "",
+          description: "",
           reserved: "",
           categoryid: "",
-        },
-        {
-          name: "",
-          serialnumber: "",
-          descriptions: "",
-          reserved: "",
-          categoryid: "",
-        },
-        {
-          name: "",
-          serialnumber: "",
-          descriptions: "",
-          reserved: "",
-          categoryid: "",
-        },
-        {
-          name: "",
-          serialnumber: "",
-          descriptions: "",
-          reserved: "",
-          categoryid: "",
-        },
-        {
-          name: "",
-          serialnumber: "",
-          descriptions: "",
-          reserved: "",
-          categoryid: "",
-        },
-        {
-          name: "",
-          serialnumber: "",
-          descriptions: "",
-          reserved: "",
-          categoryid: "",
-        },
-        {
-          name: "",
-          serialnumber: "",
-          descriptions: "",
-          reserved: "",
-          categoryid: "",
-        },
-        {
-          name: "",
-          serialnumber: "",
-          descriptions: "",
-          reserved: "",
-          categoryid: "",
-        },
-        {
-          name: "",
-          serialnumber: "",
-          descriptions: "",
-          reserved: "",
-          categoryid: "",
-        },
+        }
       ],
       // Les obligations pour ajouter un réservable
       valid: true,
       name: "",
-      nameRules: [(v) => !!v || "Name is required"],
-      descriptions: "",
-      descriptionsRules: [(v) => !!v || "Descriptions is required"],
-      serialnumber: "",
-      serialnumberRules: [(v) => !!v || "SerialNumber is required"],
-      categoryid: "",
-      categoryidRules: [(v) => !!v || "CategoryId is required"],
+      rules: {
+        name: [(v) => !!v || "Name is required"],
+        description: [(v) => !!v || "Description is required"],
+        serialNumber: [(v) => !!v || "Serial Number is required"],
+        categoryId: [(v) => !!v || "CategoryId is required"],
+      }
     };
   },
 
   methods: {
+    /*
+    INSERT SECTION
+     */
+
+    showInsertDialog() {
+      this.insertDialog = true;
+    },
+
+    hideInsertDialog() {
+      this.insertDialog = false;
+      this.form = {
+        name: null,
+        description: null,
+        serialNumber: null,
+        categoryId: null,
+      }
+      this.$refs.insertForm.reset()
+    },
+
+    async insertThings() {
+      try {
+        console.log("[Component][insertThing] Inserting thing");
+        const isValid = this.$refs.insertForm.validate();
+        if (!isValid) return
+        await ThingsService.insertThings(this.form.name, this.form.description, this.form.serialNumber, this.form.categoryId);
+        this.hideInsertDialog()
+      } catch (e) {
+        console.error("[Component][Things][insertThings] An error occurred when insert thing", e);
+        this.showDialogError();
+      }
+    },
+
+    /*
+    DELETE SECTION
+     */
+
     // Dialog pour suppression
     showDeleteDialog() {
       this.showMessageDelete = true;
@@ -284,31 +299,22 @@ export default {
     hideDeleteDialog() {
       this.showMessageDelete = false;
     },
+
+
     // Dialog pour modifications
     showUpdateDialog() {
-      this.showmessageUpdate = true;
+      this.showMessageUpdate = true;
     },
 
     hideUpdateDialog() {
-      this.showmessageUpdate = false;
+      this.showMessageUpdate = false;
     },
-    // Boutton qui affiche le dialog pour ajouter
-    onclickAdd() {
-      this.showAdd = !this.showAdd;
-    },
-    // Validation de l'ajout d'un réservable
-    async validate() {
-      try {
-        this.$refs.form.validate();
-        await this.insertThings();
-      } catch (e) {
-        console.error("[Component][validate]", e);
-      }
-    },
+
     // Reset les champs pendant l'ajout d'un réservable
     reset() {
       this.$refs.form.reset();
     },
+
     // Dialog pour les ereurs services
     showDialogError() {
       this.showMessageError = true;
@@ -317,20 +323,7 @@ export default {
     hideDialogError() {
       this.showMessageError = false;
     },
-    async insertThings() {
-      console.log("[Component][insertThing]");
-      try {
-        alert(JSON.stringify(this.form));
-        await ThingsService.insertThings();
-        console.log(this.form);
-      } catch (e) {
-        console.error(
-          "[Component][Things][insertThings] An error occurred when insert thing",
-          e
-        );
-        this.showDialogError();
-      }
-    },
+
     async deleteThings() {
       try {
         if (this.selectedThingToDelete) {
@@ -338,8 +331,8 @@ export default {
         }
       } catch (e) {
         console.error(
-          "[Component][Things][deleteThings] An error occurred when insert thing",
-          e
+            "[Component][Things][deleteThings] An error occurred when insert thing",
+            e
         );
         this.showDialogError();
       }
@@ -352,8 +345,8 @@ export default {
         }
       } catch (e) {
         console.error(
-          "[Component][Things][updateThings] An error occurred when insert thing",
-          e
+            "[Component][Things][updateThings] An error occurred when insert thing",
+            e
         );
         this.showDialogError();
       }
@@ -378,12 +371,15 @@ export default {
 .margin-left {
   margin-left: 100px;
 }
+
 .margin-right {
   margin-right: 100px;
 }
+
 .search-padding {
   margin-right: 85px;
 }
+
 .btn-add {
   margin-top: 100px;
   margin-left: 100px;
