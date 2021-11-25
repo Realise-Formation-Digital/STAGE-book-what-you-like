@@ -26,7 +26,7 @@
           <v-btn icon color="red" @click="bouttonAction(item)">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
-          <v-btn icon color="dark" @click="bouttonAction(item)">
+          <v-btn icon color="dark" @click="bouttonActionUpdate(item)">
             <v-icon>mdi-lead-pencil</v-icon>
           </v-btn>
         </template>
@@ -114,13 +114,38 @@
       <!-- Dialogue pour confirmation de supression -->
       <v-dialog v-model="showMessageDelete" max-width="600px">
         <v-card>
-          <v-card-text>Are you sure to delete {{selectedThingToDelete && selectedThingToDelete.name}}?</v-card-text>
+          <v-card-text
+            >Are you sure to delete
+            {{
+              selectedThingToDelete && selectedThingToDelete.name
+            }}?</v-card-text
+          >
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="error" class="mr-4" @click="deleteThings()">
               Yes
             </v-btn>
             <v-btn color="error" class="mr-4" @click="hideDeleteDialog()">
+              No
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- Dialogue pour confirmation de modification -->
+      <v-dialog v-model="showmessageUpdate" max-width="600px">
+        <v-card>
+          <v-card-text
+            >Are you sure to modify
+            {{
+              selectedThingToUpdate && selectedThingToUpdate.name
+            }}?</v-card-text
+          >
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="error" class="mr-4" @click="updateThings()">
+              Yes
+            </v-btn>
+            <v-btn color="error" class="mr-4" @click="hideUpdateDialog()">
               No
             </v-btn>
           </v-card-actions>
@@ -141,7 +166,9 @@ export default {
       showAdd: false,
       showMessageError: false,
       showMessageDelete: false,
+      showmessageUpdate: false,
       selectedThingToDelete: null,
+      selectedThingToUpdate: null,
       search: "",
       form: {
         name: null,
@@ -249,15 +276,23 @@ export default {
   },
 
   methods: {
-
-    showDeleteDialog(){
-      this.showMessageDelete = true
+    // Dialog pour suppression
+    showDeleteDialog() {
+      this.showMessageDelete = true;
     },
 
-    hideDeleteDialog(){
-      this.showMessageDelete = false
+    hideDeleteDialog() {
+      this.showMessageDelete = false;
+    },
+    // Dialog pour modifications
+    showUpdateDialog() {
+      this.showmessageUpdate = true;
     },
 
+    hideUpdateDialog() {
+      this.showmessageUpdate = false;
+    },
+    // Boutton qui affiche le dialog pour ajouter
     onclickAdd() {
       this.showAdd = !this.showAdd;
     },
@@ -278,6 +313,7 @@ export default {
     showDialogError() {
       this.showMessageError = true;
     },
+    // Dialog pour les ereurs services
     hideDialogError() {
       this.showMessageError = false;
     },
@@ -310,8 +346,10 @@ export default {
     },
     async updateThings() {
       try {
-        await ThingsService.updateThings();
-        console.log(this.form);
+        if (this.selectedThingToUpdate) {
+          await ThingsService.updateThings(this.selectedThingToUpdate.id);
+          console.log(this.form);
+        }
       } catch (e) {
         console.error(
           "[Component][Things][updateThings] An error occurred when insert thing",
@@ -323,10 +361,14 @@ export default {
 
     //Console log pour les items
     bouttonAction(item) {
-      //alert(JSON.stringify(item));
       console.log(item);
-      this.selectedThingToDelete = item
-      this.showDeleteDialog()
+      this.selectedThingToDelete = item;
+      this.showDeleteDialog();
+    },
+    bouttonActionUpdate(item) {
+      console.log(item);
+      this.selectedThingToUpdate = item;
+      this.showUpdateDialog();
     },
   },
 };

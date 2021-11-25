@@ -1,7 +1,7 @@
 <template>
   <div align="left" justify="space-around">
     <!-- Boutton qui affiche le dialogue  -->
-    <v-btn x-large depressed class="btn-add"  @click="onclickAdd()">
+    <v-btn x-large depressed class="btn-add" @click="onclickAdd()">
       Add User
     </v-btn>
 
@@ -27,7 +27,7 @@
           <v-btn icon color="red" @click="bouttonAction(item)">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
-          <v-btn bouttonAction icon color="dark" @click="bouttonAction(item)">
+          <v-btn bouttonAction icon color="dark" @click="bouttonActionUpdate(item)">
             <v-icon>mdi-lead-pencil</v-icon>
           </v-btn>
         </template>
@@ -108,12 +108,52 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <!-- Dialogue pour confirmation de supression -->
+      <v-dialog v-model="showMessageDelete" max-width="600px">
+        <v-card>
+          <v-card-text
+            >Are you sure to delete
+            {{
+              selectedUserToDelete && selectedUserToDelete.firstname
+            }}?</v-card-text
+          >
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="error" class="mr-4" @click="deleteUser()">
+              Yes
+            </v-btn>
+            <v-btn color="error" class="mr-4" @click="hideDeleteDialog()">
+              No
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- Dialogue pour confirmation de modification -->
+      <v-dialog v-model="showmessageUpdate" max-width="600px">
+        <v-card>
+          <v-card-text
+            >Are you sure to modify
+            {{
+              selectedUserToUpdate && selectedUserToUpdate.name
+            }}?</v-card-text
+          >
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="error" class="mr-4" @click="updateUser()">
+              Yes
+            </v-btn>
+            <v-btn color="error" class="mr-4" @click="hideUpdateDialog()">
+              No
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-row>
   </div>
 </template>
 
 <script>
-import UserService from '../services/userService.js'
+import UserService from "../services/userService.js";
 export default {
   name: "User",
 
@@ -121,6 +161,11 @@ export default {
     return {
       dialog: false,
       showAdd: false,
+      showMessageError: false,
+      showMessageDelete: false,
+      showmessageUpdate: false,
+      selectedUserToDelete: null,
+      selectedUserToUpdate: null,
       search: "",
       form: {
         firstname: null,
@@ -216,6 +261,23 @@ export default {
   },
 
   methods: {
+    // Dialog pour suppression
+    showDeleteDialog() {
+      this.showMessageDelete = true;
+    },
+
+    hideDeleteDialog() {
+      this.showMessageDelete = false;
+    },
+    // Dialog pour modifications
+    showUpdateDialog() {
+      this.showmessageUpdate = true;
+    },
+
+    hideUpdateDialog() {
+      this.showmessageUpdate = false;
+    },
+    // Boutton qui affiche le dialog pour ajouter
     onclickAdd() {
       this.showAdd = !this.showAdd;
     },
@@ -235,9 +297,6 @@ export default {
       this.showMessageError = false;
     },
 
-    /**
-     *
-     */
     async insertUser() {
       try {
         alert(JSON.stringify(this.form));
@@ -251,11 +310,12 @@ export default {
         this.showDialogError();
       }
     },
-    async deleteThings() {
+    async deleteUser() {
       try {
-        alert(JSON.stringify(this.form));
-        await UserService.deleteUser();
-        console.log(this.form);
+        if (this.selectedUserToDelete) {
+          await UserService.deleteUser(this.selectedUserToDelete.id);
+          console.log(this.form);
+        }
       } catch (e) {
         console.error(
           "[Component][User][deleteUser] An error occurred when insert thing",
@@ -266,9 +326,10 @@ export default {
     },
     async updateUser() {
       try {
-        alert(JSON.stringify(this.form));
-        await UserService.updateUser();
-        console.log(this.form);
+        if (this.selectedUserToUpdate) {
+          await UserService.updateUser(this.selectedUserToUpdate.id);
+          console.log(this.form);
+        }
       } catch (e) {
         console.error(
           "[Component][User][updateUser] An error occurred when insert thing",
@@ -279,9 +340,15 @@ export default {
     },
 
     //Console log pour les items
-    async bouttonAction(item) {
-      alert(JSON.stringify(item));
+    bouttonAction(item) {
       console.log(item);
+      this.selectedUserToDelete = item;
+      this.showDeleteDialog();
+    },
+    bouttonActionUpdate(item) {
+      console.log(item);
+      this.selectedUserToUpdate = item;
+      this.showUpdateDialog();
     },
   },
 };
