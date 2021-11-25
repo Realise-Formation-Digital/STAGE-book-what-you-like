@@ -1,16 +1,7 @@
 <template>
-  <v-navigation-drawer
-      v-model="showSideNav"
-      absolute
-      temporary
-  >
-    <v-list
-        nav
-        dense
-    >
-      <v-list-item-group
-          active-class="deep-purple--text text--accent-4"
-      >
+  <v-navigation-drawer v-model="showSideNav" absolute temporary>
+    <v-list nav dense>
+      <v-list-item-group active-class="deep-purple--text text--accent-4">
         <v-list-item link :to="paths.home">
           <v-list-item-icon>
             <v-icon>mdi-home</v-icon>
@@ -31,30 +22,35 @@
           </v-list-item-icon>
           <v-list-item-title>Contact Us</v-list-item-title>
         </v-list-item>
+        <v-list-item link :to="paths.things">
+          <v-list-item-icon>
+            <v-icon>mdi-tag-plus-outline</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Things</v-list-item-title>
+        </v-list-item>
       </v-list-item-group>
     </v-list>
   </v-navigation-drawer>
 </template>
 
 <script>
-import {paths} from "../libs/defaultValues";
+import { paths } from "../libs/defaultValues";
 export default {
   name: "Sidebar",
   data: () => {
     return {
       showSideNav: false,
-      paths: paths
-    }
+      paths: paths,
+    };
   },
   methods: {
     showHideSidenav() {
-      console.log('click received')
-      this.showSideNav = !this.showSideNav
-    }
-  }
-}
+      console.log("click received");
+      this.showSideNav = !this.showSideNav;
+    },
+  },
+};
 </script>
 
 <style scoped>
-
 </style>
