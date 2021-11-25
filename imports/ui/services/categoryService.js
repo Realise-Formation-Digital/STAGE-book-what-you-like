@@ -15,7 +15,7 @@ class CategoryService {
         try {
             return meteorCall()
         } catch (e) {
-            console.error('[Services][CategoryService][deleteSelectedItem] An error occurred when insert category', e)
+            console.error('[Services][CategoryService][deleteSelectedItem] An error occurred when deleteSelectedItem', e)
             throw new Meteor.Error(e.error, e.reason, e.details)
         }
     }

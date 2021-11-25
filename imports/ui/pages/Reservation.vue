@@ -345,7 +345,7 @@ export default {
         console.log("Test", this.itemToDelete);
         await ReservationService.insertReservation(this.itemToDelete.id);
         this.closeDialogAndCleanVariables();
-        this.DeleteDialog();
+        
       } catch (e) {
         console.error(
           "[Component][Reservation][deleteSelectedItem] An error occurred when inert reservation",

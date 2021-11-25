@@ -16,7 +16,7 @@ class ReservationService {
         try {
             return meteorCall()
         } catch (e) {
-            console.error('[Services][reservationService][insertReservation] An error occurred when insert reservation', e)
+            console.error('[Services][reservationService][deleteSelectedItem] An error occurred when deleteSelectedItem', e)
             throw new Meteor.Error(e.error, e.reason, e.details)
         }
     }
