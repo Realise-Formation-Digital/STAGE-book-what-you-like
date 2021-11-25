@@ -134,7 +134,7 @@
           <v-card-text
             >Are you sure to modify
             {{
-              selectedUserToUpdate && selectedUserToUpdate.name
+              selectedUserToUpdate && selectedUserToUpdate.firstname
             }}?</v-card-text
           >
           <v-card-actions>
