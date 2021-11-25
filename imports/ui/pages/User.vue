@@ -1,155 +1,191 @@
 <template>
-  <div align="left" justify="space-around">
-    <!-- Boutton qui affiche le dialogue  -->
-    <v-btn x-large depressed class="btn-add" @click="onclickAdd()">
-      Add User
-    </v-btn>
-
-    <v-card flat>
-      <v-card-title>
-        <v-spacer></v-spacer>
+  <v-container>
+   <!-- button -->
+    <v-row>
+      <v-col>
+        <v-btn
+            large
+            rounded
+            class="green darken-1 white--text"
+            @click="showInsertDialog()">
+          <v-icon left>mdi-plus</v-icon>
+          Insert User
+        </v-btn>
+      </v-col>
+    </v-row>
+    <!-- search bar -->
+    <v-row>
+      <v-col></v-col>
+      <v-col>
         <v-text-field
-          class="search-padding"
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
+            class="search-padding"
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
         ></v-text-field>
-      </v-card-title>
-      <v-data-table
-        class="margin-left margin-right"
-        :headers="headers"
-        :items="reservable"
-        :search="search"
-      >
-        <template v-slot:item.action="{ item }">
-          <v-btn icon color="red" @click="bouttonAction(item)">
-            <v-icon>mdi-delete</v-icon>
-          </v-btn>
-          <v-btn bouttonAction icon color="dark" @click="bouttonActionUpdate(item)">
-            <v-icon>mdi-lead-pencil</v-icon>
-          </v-btn>
-        </template>
-      </v-data-table>
-    </v-card>
+      </v-col>
+    </v-row>
 
-    <v-row justify="center">
-      <v-dialog v-model="showAdd" max-width="600px">
-        <v-card>
-          <v-form ref="form" v-model="valid" lazy-validation>
-            <v-card-title>
-              <span class="text-h5">Add</span>
-            </v-card-title>
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
+      <!-- data-table -->
+    <v-row>
+      <v-col>
+        <v-data-table
+            class="margin-left margin-right"
+            :headers="headers"
+            :items="reservable"
+            :search="search"
+        >
+          <template v-slot:item.action="{ item }">
+            <!-- Deux boutton pour supression et modification -->
+            <v-btn icon color="red" @click="bouttonAction(item)">
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+            <v-btn icon color="dark" @click="bouttonActionUpdate(item)">
+              <v-icon>mdi-lead-pencil</v-icon>
+            </v-btn>
+          </template>
+          >
+        </v-data-table
+        >
+      </v-col>
+    </v-row>
+
+    <!-- dialogs -->
+    <!-- insert dialog -->
+    <v-dialog v-model="insertDialog" width="600px">
+      <v-card>
+        <v-form ref="insertForm" v-model="valid" lazy-validation>
+          <v-card-title>
+            <span class="text-h5">Insert new Thing</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col>
+                  <v-text-field
                       v-model="form.firstname"
-                      :rules="firstnameRules"
+                      :rules="rules.firstname"
                       label="FirstName"
                       required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field
                       v-model="form.lastname"
-                      :rules="lastnameRules"
+                      :rules="rules.lastname"
                       label="LastName"
                       required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field
                       v-model="form.email"
-                      :rules="emailRules"
+                      :rules="rules.email"
                       label="E-mail"
                       required
-                    ></v-text-field>
-                    <v-text-field
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field
                       v-model="form.role"
-                      :rules="roleRules"
+                      :rules="rules.role"
                       label="Role"
                       required
-                    ></v-text-field>
-                  </v-col>
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                class="red darken-1 white--text"
+                large
+                rounded
+                @click="hideInsertDialog()"
+            >
+              <v-icon left>mdi-cancel</v-icon>
+              Cancel
+            </v-btn>
+            <v-btn
+                class="green darken-1 white--text"
+                large
+                rounded
+                @click="insertUser()"
+            >
+              <v-icon left>mdi-check</v-icon>
+              Insert
+            </v-btn>
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
 
-                  <v-col cols="12" sm="6"> </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
+          <!-- error dialog-->
+    <v-dialog v-model="showMessageError" max-width="600px">
+      <v-card>
+        <v-card-text>Error</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" class="mr-4" @click="hideDialogError()">
+            Close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
-              <v-btn
-                :disabled="!valid"
-                color="success"
-                class="mr-4"
-                @click="validate"
-              >
-                Validate
-              </v-btn>
-              <v-btn color="error" class="mr-4" @click="reset">
-                Reset Form
-              </v-btn>
-            </v-card-actions>
-          </v-form>
-        </v-card>
-      </v-dialog>
-      <v-dialog v-model="showMessageError" max-width="600px">
-        <v-card>
-          <v-card-text>Error</v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="error" class="mr-4" @click="hideDialogError()">
-              Close
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <!-- Dialogue pour confirmation de supression -->
-      <v-dialog v-model="showMessageDelete" max-width="600px">
-        <v-card>
-          <v-card-text
-            >Are you sure to delete
-            {{
-              selectedUserToDelete && selectedUserToDelete.firstname
-            }}?</v-card-text
-          >
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="error" class="mr-4" @click="deleteUser()">
-              Yes
-            </v-btn>
-            <v-btn color="error" class="mr-4" @click="hideDeleteDialog()">
-              No
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <!-- Dialogue pour confirmation de modification -->
-      <v-dialog v-model="showmessageUpdate" max-width="600px">
-        <v-card>
-          <v-card-text
-            >Are you sure to modify
-            {{
-              selectedUserToUpdate && selectedUserToUpdate.firstname
-            }}?</v-card-text
-          >
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="error" class="mr-4" @click="updateUser()">
-              Yes
-            </v-btn>
-            <v-btn color="error" class="mr-4" @click="hideUpdateDialog()">
-              No
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-row>
-  </div>
+    <!-- dialog selected item to delete -->
+    <v-dialog v-model="showMessageDelete" max-width="600px">
+      <v-card>
+        <v-card-text
+        >Are you sure to delete
+          {{
+            selectedUserToDelete && selectedUserToDelete.name
+          }}?
+        </v-card-text
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" class="mr-4" @click="deleteUser()">
+            Yes
+          </v-btn>
+          <v-btn color="error" class="mr-4" @click="hideDeleteDialog()">
+            No
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- dialog to update -->
+    <v-dialog v-model="showMessageUpdate" max-width="600px">
+      <v-card>
+        <v-card-text
+        >Are you sure to modify
+          {{
+            selectedUserToUpdate && selecteduserToUpdate.name
+          }}?
+        </v-card-text
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" class="mr-4" @click="updateUser()">
+            Yes
+          </v-btn>
+          <v-btn color="error" class="mr-4" @click="hideUpdateDialog()">
+            No
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 
 <script>
@@ -160,7 +196,7 @@ export default {
   data() {
     return {
       dialog: false,
-      showAdd: false,
+      insertDialog: false,
       showMessageError: false,
       showMessageDelete: false,
       showmessageUpdate: false,
@@ -199,68 +235,56 @@ export default {
           email: "",
           role: "",
         },
-        {
-          firstname: "",
-          lastname: "",
-          email: "",
-          role: "",
-        },
-        {
-          firstname: "",
-          lastname: "",
-          email: "",
-          role: "",
-        },
-        {
-          firstname: "",
-          lastname: "",
-          email: "",
-          role: "",
-        },
-        {
-          firstname: "",
-          lastname: "",
-          email: "",
-        },
-        {
-          firstname: "",
-          lastname: "",
-          email: "",
-          role: "",
-        },
-        {
-          firstname: "",
-          lastname: "",
-          email: "",
-          role: "",
-        },
-        {
-          firstname: "",
-          lastname: "",
-          email: "",
-          role: "",
-        },
-        {
-          firstname: "",
-          lastname: "",
-          email: "",
-          role: "",
-        },
       ],
-      // Les obligations pour ajouter un réservable
+       // Les obligations pour ajouter un réservable
       valid: true,
-      firstname: "",
-      firstnameRules: [(v) => !!v || "FirstName is required"],
-      lastname: "",
-      lastnameRules: [(v) => !!v || "LastName is required"],
-      email: "",
-      emailRules: [(v) => !!v || "E-mail is required"],
-      role: "",
-      roleRules: [(v) => !!v || "Role is required"],
+      name: "",
+      rules: {
+        firstname: [(v) => !!v || "FirstName is required"],
+        lastname: [(v) => !!v || "LastName is required"],
+        email: [(v) => !!v || "E-mail is required"],
+        role: [(v) => !!v || "Role is required"],
+      }
     };
   },
 
   methods: {
+    /*
+    INSERT SECTION
+     */
+
+    showInsertDialog() {
+      this.insertDialog = true;
+    },
+
+    hideInsertDialog() {
+      this.insertDialog = false;
+      this.form = {
+        firstname: null,
+        lastname: null,
+        email: null,
+        role: null,
+      }
+      this.$refs.insertForm.reset()
+    },
+
+    async insertUser() {
+      try {
+        console.log("[Component][insertUser] Inserting thing");
+        const isValid = this.$refs.insertForm.validate();
+        if (!isValid) return
+        await UserService.insertUser(this.form.firstname, this.form.lastname, this.form.email, this.form.role);
+        this.hideInsertDialog()
+      } catch (e) {
+        console.error("[Component][User][insertUser] An error occurred when insert user", e);
+        this.showDialogError();
+      }
+    },
+
+    /*
+    DELETE SECTION
+     */
+
     // Dialog pour suppression
     showDeleteDialog() {
       this.showMessageDelete = true;
@@ -269,57 +293,40 @@ export default {
     hideDeleteDialog() {
       this.showMessageDelete = false;
     },
+
+
     // Dialog pour modifications
     showUpdateDialog() {
-      this.showmessageUpdate = true;
+      this.showMessageUpdate = true;
     },
 
     hideUpdateDialog() {
-      this.showmessageUpdate = false;
+      this.showMessageUpdate = false;
     },
-    // Boutton qui affiche le dialog pour ajouter
-    onclickAdd() {
-      this.showAdd = !this.showAdd;
-    },
-    // Validation de l'ajout d'un réservable
-    validate() {
-      this.$refs.form.validate();
-    },
+
     // Reset les champs pendant l'ajout d'un réservable
     reset() {
       this.$refs.form.reset();
     },
-    // Console log pour le service
+
+    // Dialog pour les ereurs services
     showDialogError() {
       this.showMessageError = true;
     },
+    // Dialog pour les ereurs services
     hideDialogError() {
       this.showMessageError = false;
     },
 
-    async insertUser() {
-      try {
-        alert(JSON.stringify(this.form));
-        await UserService.insertUser();
-        console.log(this.form);
-      } catch (e) {
-        console.error(
-          "[Component][User][insertUser] An error occurred when insert thing",
-          e
-        );
-        this.showDialogError();
-      }
-    },
     async deleteUser() {
       try {
         if (this.selectedUserToDelete) {
-          await UserService.deleteUser(this.selectedUserToDelete.id);
-          console.log(this.form);
+          await ThingsService.deleteUser(this.selectedUserToDelete.id);
         }
       } catch (e) {
         console.error(
-          "[Component][User][deleteUser] An error occurred when insert thing",
-          e
+            "[Component][User][deleteUser] An error occurred when insert user",
+            e
         );
         this.showDialogError();
       }
@@ -332,8 +339,8 @@ export default {
         }
       } catch (e) {
         console.error(
-          "[Component][User][updateUser] An error occurred when insert thing",
-          e
+            "[Component][User][updateUser] An error occurred when insert user",
+            e
         );
         this.showDialogError();
       }
@@ -353,7 +360,7 @@ export default {
   },
 };
 </script>
-
+ 
 <style scoped>
 .margin-left {
   margin-left: 100px;
@@ -362,7 +369,7 @@ export default {
   margin-right: 100px;
 }
 .search-padding {
-  margin-right: 85px;
+  margin-right: 100px;
 }
 .btn-add {
   margin-top: 100px;

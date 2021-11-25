@@ -377,7 +377,7 @@ export default {
 }
 
 .search-padding {
-  margin-right: 85px;
+  margin-right: 100px;
 }
 
 .btn-add {
