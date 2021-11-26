@@ -2,8 +2,21 @@
   <v-container>
     <v-app>
       <v-main>
-        <v-btn @click="showInsertDialog()">save</v-btn>
-
+        <!-- first Row -->
+        <v-row>
+          <v-col>
+            <v-btn
+              rounded
+              large
+              color="green darken-1 white--text"
+              @click="showInsertDialog()"
+            >
+              <v-icon left> mdi-plus </v-icon>
+              Reservation
+            </v-btn>
+          </v-col>
+        </v-row>
+        <!-- Second row -->
         <v-row class="text-right">
           <v-col md="6"></v-col>
           <v-col md="6">
@@ -28,9 +41,16 @@
             Active picker: <code>{{ activePicker || "null" }}</code>
           </div>
           <template v-slot:item.actions="{ item }">
-            <v-icon small @click="selectItemToDeleteAndOpenDialog(item)">
-              mdi-delete
-            </v-icon>
+            <v-btn icon color="orange">
+              <v-icon>mdi-pencil</v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              color="red"
+              @click="selectItemToDeleteAndOpenDialog(item)"
+            >
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
           </template>
         </v-data-table>
 
@@ -43,25 +63,40 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
-                color="blue darken-1"
-                text
-                @click="closeDialogAndCleanVariables()"
-                >Cancel</v-btn
+                color="red darken-1 white--text"
+                large
+                rounded
+                @click="cancelInsertReservation()"
               >
-              <v-btn color="blue darken-1" text @click="deleteSelectedItem()"
-                >OK</v-btn
+                <v-icon left> mdi-close </v-icon>
+                Cancel
+              </v-btn>
+              <v-btn
+                color="green darken-1 white--text"
+                large
+                rounded
+                @click="insertReservation()"
               >
+                <v-icon left> mdi-check </v-icon>
+                Insert
+              </v-btn>
+
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
         </v-dialog>
-
+        <!-- insert dialog -->
         <v-dialog v-model="insertDialog" max-width="600px">
           <v-card>
             <v-card-title class="text-h5"> add something </v-card-title>
 
             <v-card-text>
               <v-container>
+                 <v-sheet
+          dark
+          class="pa-4"
+        >
+          <pre>{{ showColor }}</pre>
                 <v-row>
                   <v-col cols="12">
                     <v-text-field
@@ -157,23 +192,28 @@
 
                   <v-col cols="12" sm="6"> </v-col>
                 </v-row>
+                </v-sheet>
               </v-container>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
-                color="green darken-1"
-                text
-                @click="insertClearReservation()"
+                color="red darken-1 white--text"
+                large
+                rounded
+                @click="cancelInsertReservation()"
               >
+                <v-icon left> mdi-close </v-icon>
                 Cancel
               </v-btn>
               <v-btn
-                color="green darken-1"
-                text
-                @click="insertSaveReservation()"
+                color="green darken-1 white--text"
+                large
+                rounded
+                @click="insertReservation()"
               >
-                Agree
+                <v-icon left> mdi-check </v-icon>
+                Insert
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -253,13 +293,6 @@ export default {
     };
   },
   methods: {
-  
-
-    customError() {
-      this.nameErrorCount = 3;
-      this.nameErrorDescription = ["this field has error"];
-    },
-
     async deleteItemConfirm(item) {
       alert(JSON.stringify(item));
       console.log(item);
@@ -283,30 +316,16 @@ export default {
         category: null,
       };
     },
-    insertClearReservation() {
-      this.insertDialog = false;
-      this.form = {
-        from: null,
-        to: null,
-        thinks: null,
-        user: null,
-        category: null,
-      };
-    },
-    insertSaveReservation() {
-      this.insertDialog = false;
-      this.form = {
-        from: null,
-        to: null,
-        thinks: null,
-        user: null,
-        category: null,
-      };
+
+    cancelInsertReservation() {
+      this.hideInsertDialog(true);
     },
 
+   
     async insertReservation() {
       try {
-        console.log("Test", this.form);
+        console.log("Insert Reservation", this.form);
+        
         await ReservationService.insertReservation(
           this.form.from,
           this.form.to,
@@ -314,7 +333,7 @@ export default {
           this.form.user,
           this.form.category
         );
-        this.hideInsertDialog();
+        this.hideInsertDialog(true);
       } catch (e) {
         console.error(
           "[Component][Reservation][insertSaveReservation] An error occurred when inert reservation",
@@ -345,7 +364,6 @@ export default {
         console.log("Test", this.itemToDelete);
         await ReservationService.insertReservation(this.itemToDelete.id);
         this.closeDialogAndCleanVariables();
-        
       } catch (e) {
         console.error(
           "[Component][Reservation][deleteSelectedItem] An error occurred when inert reservation",
