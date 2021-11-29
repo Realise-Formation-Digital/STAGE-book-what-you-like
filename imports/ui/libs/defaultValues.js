@@ -4,6 +4,9 @@ const paths = {
   aboutUs: "/about-us",
   things: "/things",
   user: "/user",
+  category: '/category',
+  reservation: '/reservation',
+
 }
 
 const meteorMethods = {

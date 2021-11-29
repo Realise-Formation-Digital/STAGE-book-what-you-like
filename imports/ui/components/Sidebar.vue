@@ -31,18 +31,35 @@
           </v-list-item-icon>
           <v-list-item-title>Contact Us</v-list-item-title>
         </v-list-item>
+
        <v-list-item link :to="paths.things">
-          <v-list-item-icon> 
+          <v-list-item-icon>
             <v-icon>mdi-tag-plus-outline</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Things</v-list-item-title>
         </v-list-item>
+
         <v-list-item link :to="paths.user">
-          <v-list-item-icon> 
+          <v-list-item-icon>
             <v-icon>mdi-account-plus</v-icon>
           </v-list-item-icon>
           <v-list-item-title>User</v-list-item-title>
         </v-list-item>
+
+        <v-list-item link :to="paths.category">
+          <v-list-item-icon>
+            <v-icon>mdi-card-account-mail</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Category</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item link :to="paths.reservation">
+          <v-list-item-icon>
+            <v-icon>mdi-card-account-mail</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Reservation</v-list-item-title>
+        </v-list-item>
+
       </v-list-item-group>
     </v-list>
   </v-navigation-drawer>
@@ -60,11 +77,11 @@ export default {
   },
   methods: {
     showHideSidenav() {
-      console.log('click received')
-      this.showSideNav = !this.showSideNav
-    }
-  }
-}
+      console.log("click received");
+      this.showSideNav = !this.showSideNav;
+    },
+  },
+};
 </script>
 
 <style scoped>
