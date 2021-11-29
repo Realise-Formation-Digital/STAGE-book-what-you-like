@@ -35,7 +35,6 @@
             class="elevation-1"
         >
           <template v-slot:item.actions="{ item }">
-
             <v-btn icon color="orange">
               <v-icon
                   icon
@@ -213,6 +212,7 @@ export default {
           value: "name",
         },
         {text: "description", value: "description"},
+        {text: "ts", value: "ts"},
         {text: "Actions", value: "actions", sortable: false},
       ],
       itemToDelete: null,
