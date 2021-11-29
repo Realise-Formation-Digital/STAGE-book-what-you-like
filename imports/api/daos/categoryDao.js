@@ -26,7 +26,7 @@ class CategoryDao {
   /**
    * delete Category
    * @param {string} id - id to remove
-   * @returns *
+   * @returns {Promise<any>}
    */
   static async removeCategory(id) {
     console.log('[DAO][Category][removeCategory] Removing category with params', id)
@@ -43,17 +43,16 @@ class CategoryDao {
   /**
    * Update a single category
    * @param {string} id - id to update
-   * @param {string} title - title to update
-   * @param {string} description - description to update
+   * @param {object} objectToUpdate - object that contains all the changes
    * @returns {Promise<any>}
    */
-  static async updateCategory(id, title, description) {
-    console.log('[DAO][Category][updateCategory] Updating category with params', title, description)
+  static async updateCategory(id, objectToUpdate) {
+    console.log('[DAO][Category][updateCategory] Updating category with params', id, objectToUpdate)
     try {
-      return CategoriesCollection.update({_id: id}, {
+      /*return CategoriesCollection.update({_id: id}, {
         title: title,
         description: description
-      })
+      })*/ //todo
     } catch (e) {
       console.error('[DAO][Category][updateCategory] An error occurred when updating category in database', e)
       throw new Meteor.Error('0003', 'An error occurred in dao when updating category', e.detail)

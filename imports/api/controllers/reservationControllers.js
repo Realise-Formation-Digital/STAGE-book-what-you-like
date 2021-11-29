@@ -46,12 +46,10 @@ Meteor.methods({
 
   // todo update
   // create method to modify reservation
-  async updateReservation(title, timestampFrom, timestampTo) {
+  async updateReservation(id, objectToUpdate) {
     try {
+      console.log('[Controller][Reservation][updateReservation] Removing reservation with params', id, objectToUpdate)
       let result = null
-
-      console.log(title, timestampFrom, timestampTo)
-
       result = ReservationsModel.updateReservation(title, timestampFrom, timestampTo)
 
       return result

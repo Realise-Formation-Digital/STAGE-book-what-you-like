@@ -56,20 +56,28 @@ class ThingDao {
     }
   }
 
-  static async updateThing(name, description, imgId, reserved, serial_number, parkingType = null, hasCable, hasWhiteBoard, timestamp) {
-    console.log('[ThingDao][updateThing] Updating thing with params', name, description, imgId, reserved, serial_number, parkingType = null, hasCable, hasWhiteBoard, timestamp)
+  /**
+   * Update a single thing
+   * @param {string} id- id to update
+   * @param {object} objectToUpdate - object to update
+   * @return {Promise<any>}
+   */
+  static async updateThing(id, objectToUpdate) {
+    console.log('[ThingDao][updateThing] Updating thing with params', id, objectToUpdate)
     try {
-      return ThingsCollection.update({
+      const {name, description, imgId, reserved, serialNumber, categoryId, parkingType, hasCable, hasWhiteboard, ts} = objectToUpdate
+      return ThingsCollection.update({_id: id}, {
         name: name,
         description: description,
         imgId: imgId,
         reserved: reserved,
-        serial_number: serial_number,
-        
+        serial_number: serialNumber,
+        categoryId: categoryId,
         parkingType: parkingType,
         hasCable: hasCable,
-        hasWhiteBoard: hasWhiteBoard,
-        timestamp: timestamp,
+        hasWhiteboard: hasWhiteboard,
+        timestamp: ts,
+
       })
     } catch (e) {
       console.error('[ThingDao][updateThing] An error occurred when updating thing in database', e)

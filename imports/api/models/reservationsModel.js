@@ -47,11 +47,17 @@ class ReservationsModel {
     }
   }
 
-  /* update the reservation*/
-  static async updateReservation(userId, title, tsFrom, tsTo) {
+  /**
+   * Update a single reservation
+   * @param {string} id - id to update
+   * @param objectToUpdate - object that contains all the changes
+   * @return {Promise<*>}
+   */
+  static async updateReservation(id, objectToUpdate) {
     try {
+      console.log('[Model][Reservation][updateReservation] Removing reservation with params', id, objectToUpdate)
       let result = null
-      result = await ReservationDao.updateReservation(userId, title, tsFrom, tsTo)
+      result = await ReservationDao.updateReservation(id, objectToUpdate)
       return result
     } catch (e) {
       console.error('[ReservationsModel][updateReservation] An error occurred when updating reservation', e)

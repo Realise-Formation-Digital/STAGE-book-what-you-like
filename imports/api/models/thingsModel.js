@@ -48,14 +48,20 @@ class ThingsModel {
     }
   }
 
-  /**update the thing */
-  static async updateThing(name, description, reserved, serialNumber, parkingType = null, hasCable, hasWhiteBoard, timestamp) {
+  /**
+   * Object
+   * @param {string} id - id to update
+   * @param {object} objectToUpdate - object that contains all the changes
+   * @return {Promise<*>}
+   */
+  static async updateThing(id, objectToUpdate) {
     try {
+      console.log('[Model][Things][updateThing] Removing thing with params', id, objectToUpdate)
       let result = null
-      result = await ThingDao.insertThing(name, description, reserved, serialNumber, parkingType = null, hasCable, hasWhiteBoard, timestamp) // todo pour update on va inserir? XD
+      result = await ThingDao.updateThing(id, objectToUpdate)
       return result
     } catch (e) {
-      console.error('[ThingsModel][updateThing] An error occurred when update thing', e)
+      console.error('[Model][Things][updateThing] An error occurred when update thing', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   }

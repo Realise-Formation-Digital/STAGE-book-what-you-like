@@ -17,13 +17,13 @@ Meteor.methods({
    */
   async insertThing(name, description, reserved, serial_number, parkingType = null, hasCable, hasWhiteBoard) {
     try {
-      console.log('[Controller][Reservation][insertThing] Inserting reservation with params', name, description, reserved, serial_number, parkingType, hasCable, hasWhiteBoard)
+      console.log('[Controller][Things][insertThing] Inserting reservation with params', name, description, reserved, serial_number, parkingType, hasCable, hasWhiteBoard)
       let result = null
       const ts = new Date().getTime()
       result = ThingModel.insertThing(name, description, reserved, serial_number, hasCable, hasWhiteBoard, ts)
       return result
     } catch (e) {
-      console.error('[ThingsController][insertThing] An error occurred', e)
+      console.error('[Controller][Things][insertThing] An error occurred', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   },
@@ -33,31 +33,28 @@ Meteor.methods({
    * @param {string} _id
    * @returns
    */
-  async removeThing(_id) {
+  async removeThing(id) {
     try {
-      console.log('[Controller][Reservation][removeThing] Removing reservation with params', id)
+      console.log('[Controller][Things][removeThing] Removing thing with params', id)
       let result = null
       result = ThingModel.removeThing(_id)
       return result
     } catch (e) {
-      console.error('[ThingsController][removeThing] An error occurred', e)
+      console.error('[Controller][Things][removeThing] An error occurred', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   },
 
   // todo do a good comment
   // create method to modify thing
-  async updateThing(_id, name, description, reserved, serial_number, parkingType = null, hasCable, hasWhiteBoard, timestamp) {
+  async updateThing(id, objectToUpdate) {
     try {
+      console.log('[Controller][Things][updateThing] Updating thing with params', id, objectToUpdate)
       let result = null
-
-      console.log(_id, name, description, reserved, serial_number, parkingType = null, hasCable, hasWhiteBoard, timestamp)
-
       result = ThingModel.updateThing(name, description, reserved, serial_number, parkingType = null, hasCable, hasWhiteBoard, timestamp)
-
       return result
     } catch (e) {
-      console.error('[ThingsController][updateThing] An error occurred', e)
+      console.error('[Controller][Things][updateThing] An error occurred', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   }

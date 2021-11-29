@@ -45,18 +45,24 @@ class ReservationDao {
       throw new Meteor.Error('0005', 'An error occurred in dao when removing reservation', e.detail)
     }
   }
- 
-  static async updateReservation(name, timestampFrom, timestampTo) {
-    console.log('[ReservationDao][updateReservation] Updating reservation with params', name, timestampFrom, timestampTo)
+
+  /**
+   * Update a single reservation
+   * @param {string} id - id to update
+   * @param {object} objectToUpdate - update a single object
+   * @return {Promise<void>}
+   */
+  static async updateReservation(id, objectToUpdate) {
+    console.log('[DAO][Reservation][updateReservation] Updating reservation with params', id, objectToUpdate)
     try {
-      return ReservationsCollection.update({
+      /*return ReservationsCollection.update({
         name: name,
         timestampFrom: timestampFrom,
         timestampTo: timestampTo,
-      })
+      })*/ // todo
     } catch (e) {
-      console.error('[ReservationDao][updateReservation] An error occurred when updating reservation in database', e)
-      throw new Meteor.Error('0001', 'An error occurred in dao when updating reservation', e.detail)
+      console.error('[DAO][Reservation][updateReservation] An error occurred when updating reservation in database', e)
+      throw new Meteor.Error('0006', 'An error occurred in dao when updating reservation', e.detail)
     }
   }
 }

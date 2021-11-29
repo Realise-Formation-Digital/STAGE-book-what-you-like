@@ -46,15 +46,14 @@ class CategoriesModel {
   /**
    * Update a single category by id
    * @param {string} id - id to search the category to update
-   * @param {string} title - title if we want to update
-   * @param {string} description - description to update
+   * @param {object} objectToUpdate - object that contains all the cahnges
    * @returns {Promise<*>}
    */
-  static async updateCategory (id, title, description) {
+  static async updateCategory (id,objectToUpdate) {
     try {
       console.log('[Model][Categories][updateCategory] updating category with params', id)
       let result = null
-      result = await CategoryDao.updateCategory(title, description)
+      result = await CategoryDao.updateCategory(id, objectToUpdate)
       return result
     }catch (e) {
       console.error('[CategoriesModel][updateCategory] An error occurred when updating category', e)
