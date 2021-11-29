@@ -186,8 +186,10 @@
 </template>
 <script>
 import CategoryService from "../services/categoryService.js";
-
+import i18nMixin from "../mixins/i18n";
+import dateMixin from "../mixins/date";
 export default {
+  mixins: [i18nMixin, dateMixin],
   data() {
     return {
       search: "",
@@ -273,7 +275,8 @@ export default {
 
     async insertCategory() {
       try {
-        console.log("Test", this.form);
+        this.getTranslation()
+        const ts = this.getUnixTs()
         await CategoryService.insertCategory(
             this.form.name,
             this.form.description,
