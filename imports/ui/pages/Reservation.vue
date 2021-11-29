@@ -10,7 +10,7 @@
               color="green darken-1 white--text"
               @click="showInsertDialog()"
           >
-            <v-icon left> mdi-plus</v-icon>
+            <v-icon left>mdi-plus</v-icon>
             Reservation
           </v-btn>
         </v-col>

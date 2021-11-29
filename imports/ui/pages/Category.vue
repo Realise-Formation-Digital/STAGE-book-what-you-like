@@ -1,115 +1,199 @@
 <template>
   <v-container>
-    <v-app>
-      <v-main>
-        <v-btn @click="showInsertDialog()">save</v-btn>
+    <v-main>
+      <v-row>
+        <v-col>
+          <v-btn
+              large
+              rounded
+              color="green darken-1 white--text"
+              @click="showInsertDialog()">
+            <v-icon left>mdi-plus</v-icon>
+            Add Category
+          </v-btn>
 
-        <v-row class="text-right">
-          <v-col md="6"></v-col>
-          <v-col md="6">
-            <v-text-field
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col></v-col>
+        <v-col>
+          <v-text-field
               v-model="search"
               append-icon="mdi-magnify"
               label="Search"
               single-line
               hide-details
-            ></v-text-field>
-          </v-col>
-        </v-row>
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-data-table
+              :headers="headers"
+              :items="items"
+              :search="search"
+              :items-per-page="5"
+              class="elevation-1"
+          >
+            <template v-slot:item.actions="{ item }">
 
-        <v-data-table
-          :headers="headers"
-          :items="items"
-          :search="search"
-          :items-per-page="5"
-          class="elevation-1"
-        >
-          <template v-slot:item.actions="{ item }">
-            <v-icon small @click="selectItemToDeleteAndOpenDialog(item)"> mdi-delete </v-icon>
-          </template>
-        </v-data-table>
-
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="text-h5"
-              >Are you sure you want to delete the name
-              {{ itemToDelete && itemToDelete.name }}?</v-card-title
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
+              <v-btn icon color="orange">
+                <v-icon
+                    icon
+                    color="orange"
+                    @click="selectItemToUpdateAndOpenDialog(item)">
+                  mdi-pencil
+                </v-icon>
+              </v-btn>
               <v-btn
-                color="blue darken-1"
-                text
+                  icon
+                  color="red"
+                  @click="selectItemToDeleteAndOpenDialog(item)"
+              >
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-data-table>
+        </v-col>
+      </v-row>
+
+      <!-- delete dialog -->
+      <v-dialog v-model="dialogDelete" max-width="600px">
+        <v-card>
+          <v-card-title class="text-h5"
+          >Are you sure you want to delete the name<br>
+            {{ itemToDelete && itemToDelete.name }}?
+          </v-card-title
+          >
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                large
+                rounded
+                class="red darken-1 white--text"
                 @click="closeDialogAndCleanVariables()"
-                >Cancel</v-btn
-              >
-              <v-btn color="blue darken-1" text @click="deleteSelectedItem()"
-                >OK</v-btn
-              >
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+            >Cancel
+            </v-btn
+            >
+            <v-btn
+                rounded
+                large
+                class="green darken-1 white--text"
+                @click="deleteSelectedItem()">
+              OK
+            </v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
 
-        <v-dialog v-model="insertDialog" max-width="600px">
-          <v-card>
-            <v-card-title class="text-h5"> add something </v-card-title>
+      <!-- insert dialog -->
+      <v-dialog v-model="insertDialog" max-width="600px">
+        <v-card>
+          <v-card-title class="text-h5"> add something</v-card-title>
 
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
                       v-model="form.name"
                       label="Name*"
                       :rules="[rules.required, rules.counter]"
                       required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="form.desciption"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                      v-model="form.description"
                       label="Desciption*"
-                      type="desciption"
                       required
-                    ></v-text-field>
-                  </v-col>
-
-                  <v-col cols="12" sm="6"> </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
                 color="green darken-1"
                 text
                 @click="insertCleanCategory()"
-              >
-                Cancel
-              </v-btn>
-              <v-btn
+            >
+              Cancel
+            </v-btn>
+            <v-btn
                 color="green darken-1"
                 text
                 @click="insertSaveCategory()"
-              >
-                Agree
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-main>
-    </v-app>
+            >
+              Agree
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- update dialog -->
+      <v-dialog v-model="updateDialog" max-width="600px">
+        <v-card>
+          <v-card-title class="text-h5"> Update Category</v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                      v-model="form.name"
+                      label="Name*"
+                      :rules="[rules.required, rules.counter]"
+                      required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                      v-model="form.description"
+                      label="Description*"
+                      required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                large
+                rounded
+                class="red darken-1 white--text"
+                text
+                @click="hideUpdateDialog()"
+            >
+              Cancel
+            </v-btn>
+            <v-btn
+                large
+                rounded
+                class="green darken-1 white--text"
+                text
+                @click="updateCategory()"
+            >
+              Update
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-main>
   </v-container>
 </template>
 <script>
 import CategoryService from "../services/categoryService.js";
+
 export default {
   data() {
     return {
       search: "",
-     insertDialog : false,
+      insertDialog: false,
       dialogDelete: false,
+      updateDialog: false,
       actions: false,
       form: {
         name: null,
@@ -127,8 +211,8 @@ export default {
           sortable: false,
           value: "name",
         },
-        { text: "description", value: "description" },
-        { text: "Actions", value: "actions", sortable: false },
+        {text: "description", value: "description"},
+        {text: "Actions", value: "actions", sortable: false},
       ],
       items: [
         {
@@ -170,15 +254,14 @@ export default {
       };
     },
 
-    
-   
+
     insertCleanCategory() {
       this.insertDialog = false;
       this.form = {
         name: null,
         description: null,
       };
-      
+
     },
     insertSaveCategory() {
       this.insertDialog = false;
@@ -192,23 +275,23 @@ export default {
       try {
         console.log("Test", this.form);
         await CategoryService.insertCategory(
-          this.form.name,
-          this.form.description,
+            this.form.name,
+            this.form.description,
         );
-         this.hideInsertDialog();
+        this.hideInsertDialog();
       } catch (e) {
         console.error(
-          "[Component][Category][insertCategory] An error occurred when inert category",
-          e
+            "[Component][Category][insertCategory] An error occurred when inert category",
+            e
         );
       }
     },
 
 
-  /*
-    DELETE SECTION
-    */
-  
+    /*
+      DELETE SECTION
+      */
+
     selectItemToDeleteAndOpenDialog(itemToDelete) {
       this.itemToDelete = itemToDelete;
       this.dialogDelete = true;
@@ -222,19 +305,50 @@ export default {
     async deleteSelectedItem() {
       try {
         console.log("Test", this.itemToDelete);
-        await CategoryService.insertCategory(this.itemToDelete.id);
+        await CategoryService.deleteCategory(this.itemToDelete.id);
         this.closeDialogAndCleanVariables();
       } catch (e) {
         console.error(
-          "[Component][Category][deleteSelectedItem] An error occurred when inert Category",
-          e
+            "[Component][Category][deleteSelectedItem] An error occurred when inert Category",
+            e
         );
       }
     },
+
+    /*
+    UPDATE SECTION
+     */
+
+    selectItemToUpdateAndOpenDialog(item) {
+      this.form = item
+      this.showUpdateDialog()
+    },
+
+    showUpdateDialog() {
+      this.updateDialog = true
+    },
+
+    hideUpdateDialog() {
+      this.updateDialog = false
+      this.form = {
+        name: null,
+        description: null,
+      }
+    },
+
+    async updateCategory() {
+      try {
+        console.log('[Component][updateCategory] Updating category')
+        let result = null
+        result = await CategoryService.updateCategory()
+      } catch (e) {
+        console.error('[Component][updateCategory] An error occurred when updating a category', e)
+      }
+    }
 
   },
 
 };
 </script>
-<style >
+<style>
 </style>
