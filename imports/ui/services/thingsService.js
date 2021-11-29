@@ -13,6 +13,7 @@ class ThingsService {
     }
   }
   static async deleteThings(id) {
+    console.log('[Service][Things][deleteThings] Deleting things with params', id)
     try {
       return meteorCall(meteorMethods.deleteThings, id)
     } catch (e) {
@@ -21,6 +22,7 @@ class ThingsService {
     }
   }
   static async updateThings(id, form) {
+    console.log('[Service][Things][updateThings] Update things with params', id, form)
     try {
       return meteorCall(meteorMethods.updateThings, id, form)
     } catch (e) {
