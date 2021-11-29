@@ -9,16 +9,16 @@ class CategoriesModel {
 
   /**
    * Insert Category model
-   * @param title {string} - title of the category
+   * @param name {string} - title of the category
    * @param description {string} - date of insertion
    * @param ts {number} - ts of action
    * @returns {Promise<void>}
    */
-  static async insertCategory (title, description, ts) {
+  static async insertCategory (name, description, ts) {
     try {
-      console.log('[Model][Categories][insertCategory] Inserting category with params', title, description, ts)
+      console.log('[Model][Categories][insertCategory] Inserting category with params', name, description, ts)
       let result = null
-      result = await CategoryDao.insertCategory(title, description, ts)
+      result = await CategoryDao.insertCategory(name, description, ts)
       return result
     }catch (e) {
       console.error('[Model][Categories][insertCategory] An error occurred when inserting category', e)
@@ -33,7 +33,7 @@ class CategoriesModel {
    */
   static async removeCategory (id) {
     try {
-      console.log('[Model][Categories][removeCategory] remove category with params', id)
+      console.log('[Model][Categories][removeCategory] Removing category with params', id)
       let result = null
       result = await CategoryDao.removeCategory(id)
       return result

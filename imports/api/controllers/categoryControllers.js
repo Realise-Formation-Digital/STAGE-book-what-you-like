@@ -29,7 +29,7 @@ Meteor.methods({
    */
   async removeCategory(id) {
     try {
-      console.log('[Controller][Categories][removeCategories] Inserting category with params', id)
+      console.log('[Controller][Categories][removeCategories] Removing category with params', id)
       let result = null
       result = CategoriesModel.removeCategory(id)
       return result

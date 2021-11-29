@@ -4,16 +4,16 @@ class CategoryDao {
 
   /**
    * Insert Category
-   * @param title {string} - title of the link
+   * @param name {string} - title of the link
    * @param description {string} - date of insertion
    * @param ts {number} - date of insertion
    * @returns {Promise<any>}
    */
-  static async insertCategory(title, description,  ts) {
-    console.log('[DAO][Category][insertCategory] Inserting category with params', title, description, ts)
+  static async insertCategory(name, description,  ts) {
+    console.log('[DAO][Category][insertCategory] Inserting category with params', name, description, ts)
     try {
       return CategoriesCollection.insert({
-        title: title,
+        name: name,
         description: description,
         ts: ts
       })
@@ -32,7 +32,7 @@ class CategoryDao {
     console.log('[DAO][Category][removeCategory] Removing category with params', id)
     try {
       return CategoriesCollection.remove({
-        ' _id': id
+        '_id': id
       })
     } catch (e) {
       console.error('[DAO][Category][removeCategory] An error occurred when deleting category in database', e)

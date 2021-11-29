@@ -5,20 +5,20 @@ class CategoryService {
 
   static async insertCategory(name, desc) {
     try {
-      console.log('[Services][deleteCategory] Inserting category with params', name, desc)
-      return meteorCall()
+      console.log('[Services][Category][insertCategory] Inserting category with params', name, desc)
+      return meteorCall(meteorMethods.category.insert, name, desc)
     } catch (e) {
-      console.error('[Services][CategoryService][insertCategory] An error occurred when insert category', e)
+      console.error('[Services][Category][insertCategory] An error occurred when insert category', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   }
 
   static async deleteCategory(id) {
     try {
-      console.log('[Services][deleteCategory] Deleting category with params', id)
-      return meteorCall()
+      console.log('[Services][Category][deleteCategory] Deleting category with params', id)
+      return meteorCall(meteorMethods.category.delete, id)
     } catch (e) {
-      console.error('[Services][CategoryService][deleteSelectedItem] An error occurred when deleteSelectedItem', e)
+      console.error('[Services][Category][deleteCategory] An error occurred when deleteSelectedItem', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   }
