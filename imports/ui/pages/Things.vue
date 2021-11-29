@@ -44,11 +44,10 @@
             <v-btn icon color="red" @click="bouttonAction(item)">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
-            <v-btn icon color="dark" @click="bouttonActionUpdate(item)">
+            <v-btn icon color="orange" @click="bouttonActionUpdate(item)">
               <v-icon>mdi-lead-pencil</v-icon>
             </v-btn>
           </template>
-          >
         </v-data-table
         >
       </v-col>
@@ -168,24 +167,76 @@
 
     <!-- dialog to update -->
     <v-dialog v-model="showMessageUpdate" max-width="600px">
-      <v-card>
-        <v-card-text
-        >Are you sure to modify
-          {{
-            selectedThingToUpdate && selectedThingToUpdate.name
-          }}?
-        </v-card-text
-        >
+      <v-form ref="updateForm" lazy-validation>
+        <v-card-title>
+          <span class="text-h5">Update Thing</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col>
+                <v-text-field
+                    v-model="form.name"
+                    :rules="rules.name"
+                    label="Name"
+                    required
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-text-field
+                    v-model="form.description"
+                    :rules="rules.description"
+                    label="Descriptions"
+                    required
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-text-field
+                    v-model="form.serialNumber"
+                    :rules="rules.serialNumber"
+                    label="SerialNumber"
+                    required
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-text-field
+                    v-model="form.categoryId"
+                    :rules="rules.categoryId"
+                    label="CategoryId"
+                    required
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="error" class="mr-4" @click="updateThings()">
-            Yes
+          <v-btn
+              class="red darken-1 white--text"
+              large
+              rounded
+              @click="hideUpdateDialog()"
+          >
+            <v-icon left>mdi-cancel</v-icon>
+            Cancel
           </v-btn>
-          <v-btn color="error" class="mr-4" @click="hideUpdateDialog()">
-            No
+          <v-btn
+              class="green darken-1 white--text"
+              large
+              rounded
+              @click="updateThings()"
+          >
+            <v-icon left>mdi-check</v-icon>
+            Update
           </v-btn>
         </v-card-actions>
-      </v-card>
+      </v-form>
     </v-dialog>
   </v-container>
 </template>
@@ -229,17 +280,17 @@ export default {
       reservable: [
         {
           name: "Davide",
-          serialnumber: "1213",
+          serialNumber: "1213",
           description: " asdbhasda",
-          reserved: "no",
-          categoryid: "234",
+          reserved: true,
+          categoryId: "234",
         },
         {
-          name: "",
-          serialnumber: "",
-          description: "",
-          reserved: "",
-          categoryid: "",
+          name: "Dawit",
+          serialNumber: "4321",
+          description: "dawit thing",
+          reserved: true,
+          categoryId: "12345",
         }
       ],
       // Les obligations pour ajouter un réservable
@@ -308,6 +359,13 @@ export default {
 
     hideUpdateDialog() {
       this.showMessageUpdate = false;
+      this.form = {
+        name: null,
+        description: null,
+        serialNumber: null,
+        categoryId: null,
+      }
+      this.$refs.updateForm.reset()
     },
 
     // Reset les champs pendant l'ajout d'un réservable
@@ -337,11 +395,13 @@ export default {
         this.showDialogError();
       }
     },
+
     async updateThings() {
       try {
         if (this.selectedThingToUpdate) {
-          await ThingsService.updateThings(this.selectedThingToUpdate.id);
+          await ThingsService.updateThings(this.selectedThingToUpdate.id, this.form );
           console.log(this.form);
+          this.hideUpdateDialog();
         }
       } catch (e) {
         console.error(
@@ -358,9 +418,12 @@ export default {
       this.selectedThingToDelete = item;
       this.showDeleteDialog();
     },
+
+
     bouttonActionUpdate(item) {
-      console.log(item);
+      console.log("List object", item);
       this.selectedThingToUpdate = item;
+      this.form = item;
       this.showUpdateDialog();
     },
   },

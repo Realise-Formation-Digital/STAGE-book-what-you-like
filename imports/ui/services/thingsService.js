@@ -20,9 +20,9 @@ class ThingsService {
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   }
-  static async updateThings(title, url) {
+  static async updateThings(id, form) {
     try {
-      return meteorCall(meteorMethods.updateThings, title, url)
+      return meteorCall(meteorMethods.updateThings, id, form)
     } catch (e) {
       console.error('[Service][Things][updateThings] An error occurred when insert link', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
