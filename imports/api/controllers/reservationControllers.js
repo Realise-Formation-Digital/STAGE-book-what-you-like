@@ -50,7 +50,7 @@ Meteor.methods({
     try {
       console.log('[Controller][Reservation][updateReservation] Removing reservation with params', id, objectToUpdate)
       let result = null
-      result = ReservationsModel.updateReservation(title, timestampFrom, timestampTo)
+      result = await ReservationsModel.updateReservation(title, timestampFrom, timestampTo)
 
       return result
     } catch (e) {
