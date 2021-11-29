@@ -1,229 +1,357 @@
 <template>
   <v-container>
-    <v-app>
-      <v-main>
-        <!-- first Row -->
-        <v-row>
-          <v-col>
-            <v-btn
+    <v-main>
+      <!-- first Row -->
+      <v-row>
+        <v-col>
+          <v-btn
               rounded
               large
               color="green darken-1 white--text"
               @click="showInsertDialog()"
-            >
-              <v-icon left> mdi-plus </v-icon>
-              Reservation
-            </v-btn>
-          </v-col>
-        </v-row>
-        <!-- Second row -->
-        <v-row class="text-right">
-          <v-col md="6"></v-col>
-          <v-col md="6">
-            <v-text-field
+          >
+            <v-icon left> mdi-plus</v-icon>
+            Reservation
+          </v-btn>
+        </v-col>
+      </v-row>
+
+      <!-- Second row -->
+      <v-row class="text-right">
+        <v-col md="6"></v-col>
+        <v-col md="6">
+          <v-text-field
               v-model="search"
               append-icon="mdi-magnify"
               label="Search"
               single-line
               hide-details
-            ></v-text-field>
-          </v-col>
-        </v-row>
+          ></v-text-field>
+        </v-col>
+      </v-row>
 
-        <v-data-table
-          :headers="headers"
-          :items="items"
-          :search="search"
-          :items-per-page="5"
-          class="elevation-1"
-        >
-          <div class="mb-6">
-            Active picker: <code>{{ activePicker || "null" }}</code>
-          </div>
-          <template v-slot:item.actions="{ item }">
-            <v-btn icon color="orange">
-              <v-icon>mdi-pencil</v-icon>
-            </v-btn>
-            <v-btn
-              icon
-              color="red"
-              @click="selectItemToDeleteAndOpenDialog(item)"
-            >
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </template>
-        </v-data-table>
-
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="text-h5"
-              >Are you sure you want to delete the category
-              {{ itemToDelete && itemToDelete.category }}?</v-card-title
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
+      <v-row>
+        <v-col>
+          <v-data-table
+              :headers="headers"
+              :items="items"
+              :search="search"
+              :items-per-page="5"
+              class="elevation-1"
+          >
+            <div class="mb-6">
+              Active picker: <code>{{ activePicker || "null" }}</code>
+            </div>
+            <template v-slot:item.actions="{ item }">
+              <v-btn icon color="orange">
+                <v-icon
+                    icon
+                    color="orange"
+                    @click="selectItemToUpdateAndOpenDialog(item)">
+                  mdi-pencil
+                </v-icon>
+              </v-btn>
               <v-btn
+                  icon
+                  color="red"
+                  @click="selectItemToDeleteAndOpenDialog(item)"
+              >
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-data-table>
+        </v-col>
+      </v-row>
+
+      <!-- delete dialog -->
+      <v-dialog v-model="dialogDelete" max-width="600px">
+        <v-card>
+          <v-card-title class="text-h5"
+          >Are you sure you want to delete the category
+            {{ itemToDelete && itemToDelete.category }}?
+          </v-card-title
+          >
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
                 color="red darken-1 white--text"
                 large
                 rounded
                 @click="cancelInsertReservation()"
-              >
-                <v-icon left> mdi-close </v-icon>
-                Cancel
-              </v-btn>
-              <v-btn
+            >
+              <v-icon left> mdi-close</v-icon>
+              Cancel
+            </v-btn>
+            <v-btn
                 color="green darken-1 white--text"
                 large
                 rounded
                 @click="insertReservation()"
-              >
-                <v-icon left> mdi-check </v-icon>
-                Insert
-              </v-btn>
+            >
+              <v-icon left> mdi-check</v-icon>
+              Insert
+            </v-btn>
 
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <!-- insert dialog -->
-        <v-dialog v-model="insertDialog" max-width="600px">
-          <v-card>
-            <v-card-title class="text-h5"> add something </v-card-title>
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
 
-            <v-card-text>
-              <v-container>
-                 <v-sheet
-          dark
-          class="pa-4"
-        >
-          <pre>{{ showColor }}</pre>
+      <!-- insert dialog -->
+      <v-dialog v-model="insertDialog" max-width="600px">
+        <v-card>
+          <v-card-title class="text-h5">Insert Reservation</v-card-title>
+          <v-card-text>
+            <v-container>
                 <v-row>
                   <v-col cols="12">
                     <v-text-field
-                      v-model="form.thinks"
-                      label="things*"
-                      required
+                        v-model="form.thinks"
+                        label="things*"
+                        required
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
-                      v-model="form.user"
-                      label="user*"
-                      type="user"
-                      required
+                        v-model="form.user"
+                        label="user*"
+                        type="user"
+                        required
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
-                      v-model="form.category"
-                      label="category*"
-                      type="category"
-                      required
+                        v-model="form.category"
+                        label="category*"
+                        type="category"
+                        required
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
                     <v-menu
-                      ref="menu"
-                      v-model="menu"
-                      :close-on-content-click="false"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
+                        ref="menu"
+                        v-model="menu"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                          v-model="date"
-                          label="From"
-                          prepend-icon="mdi-calendar"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
+                            v-model="date"
+                            label="From"
+                            prepend-icon="mdi-calendar"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
                         ></v-text-field>
                       </template>
                       <v-date-picker
-                        v-model="date"
-                        :active-picker.sync="activePicker"
-                        :max="
+                          v-model="date"
+                          :active-picker.sync="activePicker"
+                          :max="
                           new Date(
                             Date.now() - new Date().getTimezoneOffset() * 60000
                           )
                             .toISOString()
                             .substr(0, 10)
                         "
-                        min="1950-01-01"
-                        @change="save"
+                          min="1950-01-01"
+                          @change="save"
                       ></v-date-picker>
                     </v-menu>
                   </v-col>
                   <v-col cols="12">
                     <v-menu
-                      ref="menu"
-                      v-model="menu"
-                      :close-on-content-click="false"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="auto"
+                        ref="menu"
+                        v-model="menu"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
                     >
                       <template v-slot:activator="{ on, attrs }">
                         <v-text-field
-                          v-model="date"
-                          label="To"
-                          prepend-icon="mdi-calendar"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
+                            v-model="date"
+                            label="To"
+                            prepend-icon="mdi-calendar"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
                         ></v-text-field>
                       </template>
                       <v-date-picker
-                        v-model="date"
-                        :active-picker.sync="activePicker"
-                        :max="
+                          v-model="date"
+                          :active-picker.sync="activePicker"
+                          :max="
                           new Date(
                             Date.now() - new Date().getTimezoneOffset() * 60000
                           )
                             .toISOString()
                             .substr(0, 10)
                         "
-                        min="1950-01-01"
-                        @change="save"
+                          min="1950-01-01"
+                          @change="save"
                       ></v-date-picker>
                     </v-menu>
                   </v-col>
-
-                  <v-col cols="12" sm="6"> </v-col>
                 </v-row>
-                </v-sheet>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
                 color="red darken-1 white--text"
                 large
                 rounded
                 @click="cancelInsertReservation()"
-              >
-                <v-icon left> mdi-close </v-icon>
-                Cancel
-              </v-btn>
-              <v-btn
+            >
+              <v-icon left> mdi-close</v-icon>
+              Cancel
+            </v-btn>
+            <v-btn
                 color="green darken-1 white--text"
                 large
                 rounded
                 @click="insertReservation()"
-              >
-                <v-icon left> mdi-check </v-icon>
-                Insert
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-main>
-    </v-app>
+            >
+              <v-icon left> mdi-check</v-icon>
+              Insert
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- update dialog -->
+      <v-dialog v-model="updateDialog" max-width="600px">
+        <v-card>
+          <v-card-title class="text-h5">Update Reservation</v-card-title>
+          <v-card-text>
+            <v-container>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field
+                        v-model="form.things"
+                        label="things*"
+                        required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                        v-model="form.user"
+                        label="user*"
+                        type="user"
+                        required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                        v-model="form.category"
+                        label="category*"
+                        type="category"
+                        required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-menu
+                        ref="menu"
+                        v-model="menu"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                            v-model="date"
+                            label="From"
+                            prepend-icon="mdi-calendar"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                          v-model="date"
+                          :active-picker.sync="activePicker"
+                          :max="
+                          new Date(
+                            Date.now() - new Date().getTimezoneOffset() * 60000
+                          )
+                            .toISOString()
+                            .substr(0, 10)
+                        "
+                          min="1950-01-01"
+                          @change="save"
+                      ></v-date-picker>
+                    </v-menu>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-menu
+                        ref="menu"
+                        v-model="menu"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                            v-model="date"
+                            label="To"
+                            prepend-icon="mdi-calendar"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                          v-model="date"
+                          :active-picker.sync="activePicker"
+                          :max="
+                          new Date(
+                            Date.now() - new Date().getTimezoneOffset() * 60000
+                          )
+                            .toISOString()
+                            .substr(0, 10)
+                        "
+                          min="1950-01-01"
+                          @change="save"
+                      ></v-date-picker>
+                    </v-menu>
+                  </v-col>
+                </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                color="red darken-1 white--text"
+                large
+                rounded
+                @click="cancelUpdateReservation()"
+            >
+              <v-icon left>mdi-close</v-icon>
+              Cancel
+            </v-btn>
+            <v-btn
+                color="green darken-1 white--text"
+                large
+                rounded
+                @click="updateReservation()"
+            >
+              <v-icon left> mdi-check</v-icon>
+              Update
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-main>
   </v-container>
 </template>
 <script>
 import ReservationService from "../services/reservationService.js";
+
 export default {
   name: "Reservation",
   data: () => {
@@ -231,6 +359,7 @@ export default {
       search: "",
       insertDialog: false,
       dialogDelete: false,
+      updateDialog: false,
       actions: false,
       activePicker: null,
       date: null,
@@ -241,12 +370,6 @@ export default {
         thinks: null,
         user: null,
         category: null,
-      },
-
-      watch: {
-        menu(val) {
-          val && setTimeout(() => (this.activePicker = "YEAR"));
-        },
       },
       rules: {
         required: (value) => !!value || "Required.",
@@ -260,11 +383,11 @@ export default {
           sortable: false,
           value: "category",
         },
-        { text: "things", value: "things" },
-        { text: "user", value: "user" },
-        { text: "from", value: "from" },
-        { text: "to", value: "to" },
-        { text: "Actions", value: "actions", sortable: false },
+        {text: "things", value: "things"},
+        {text: "user", value: "user"},
+        {text: "from", value: "from"},
+        {text: "to", value: "to"},
+        {text: "Actions", value: "actions", sortable: false},
       ],
       items: [
         {
@@ -318,29 +441,30 @@ export default {
     },
 
     cancelInsertReservation() {
-      this.hideInsertDialog(true);
+      this.hideInsertDialog();
     },
 
-   
+
     async insertReservation() {
       try {
         console.log("Insert Reservation", this.form);
-        
+
         await ReservationService.insertReservation(
-          this.form.from,
-          this.form.to,
-          this.form.thinks,
-          this.form.user,
-          this.form.category
+            this.form.from,
+            this.form.to,
+            this.form.thinks,
+            this.form.user,
+            this.form.category
         );
         this.hideInsertDialog(true);
       } catch (e) {
         console.error(
-          "[Component][Reservation][insertSaveReservation] An error occurred when inert reservation",
-          e
+            "[Component][Reservation][insertSaveReservation] An error occurred when inert reservation",
+            e
         );
       }
     },
+
     save(date) {
       this.$refs.menu.save(date);
     },
@@ -361,16 +485,55 @@ export default {
 
     async deleteSelectedItem() {
       try {
-        console.log("Test", this.itemToDelete);
-        await ReservationService.insertReservation(this.itemToDelete.id);
+        await ReservationService.deleteReservation(this.itemToDelete.id);
         this.closeDialogAndCleanVariables();
       } catch (e) {
         console.error(
-          "[Component][Reservation][deleteSelectedItem] An error occurred when inert reservation",
-          e
+            "[Component][Reservation][deleteSelectedItem] An error occurred when inert reservation",
+            e
         );
       }
     },
+
+    /*
+    UPDATE SECTION
+     */
+
+    showUpdateDialog() {
+      this.updateDialog = true
+    },
+
+    hideUpdateDialog() {
+      this.updateDialog = false
+    },
+
+    cancelUpdateReservation(){
+      this.form = {
+        from: null,
+        to: null,
+        thinks: null,
+        user: null,
+        category: null,
+      };
+      this.hideUpdateDialog()
+    },
+
+    selectItemToUpdateAndOpenDialog(item){
+      this.form = item
+      this.showUpdateDialog()
+    },
+
+    updateReservation() {
+      try {
+        console.log('[Components][updateReservation] Updating reservation')
+        let result = null
+        result = ReservationService.updateReservation(this.form.id, this.form)
+        this.cancelInsertReservation()
+      } catch (e) {
+        console.log("[Component][Reservation][updateReservation] An error occurred when updating reservation", e)
+        //todo something
+      }
+    }
   },
 };
 </script>
