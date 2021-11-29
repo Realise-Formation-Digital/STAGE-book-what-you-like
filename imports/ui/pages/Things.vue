@@ -41,10 +41,10 @@
         >
           <template v-slot:item.action="{ item }">
             <!-- Deux boutton pour supression et modification -->
-            <v-btn icon color="red" @click="bouttonAction(item)">
+            <v-btn icon color="red" @click="selectItemToDelete(item)">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
-            <v-btn icon color="orange" @click="bouttonActionUpdate(item)">
+            <v-btn icon color="orange" @click="selectItemToUpdate(item)">
               <v-icon>mdi-lead-pencil</v-icon>
             </v-btn>
           </template>
@@ -131,7 +131,7 @@
     </v-dialog>
 
     <!-- error dialog-->
-    <v-dialog v-model="showMessageError" max-width="600px">
+    <v-dialog v-model="showMessageError" width="600px">
       <v-card>
         <v-card-text>Error</v-card-text>
         <v-card-actions>
@@ -144,7 +144,7 @@
     </v-dialog>
 
     <!-- dialog selected item to delete -->
-    <v-dialog v-model="showMessageDelete" max-width="600px">
+    <v-dialog v-model="deleteDialog" width="600px">
       <v-card>
         <v-card-text
         >Are you sure to delete
@@ -166,77 +166,79 @@
     </v-dialog>
 
     <!-- dialog to update -->
-    <v-dialog v-model="showMessageUpdate" max-width="600px">
-      <v-form ref="updateForm" lazy-validation>
-        <v-card-title>
-          <span class="text-h5">Update Thing</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col>
-                <v-text-field
-                    v-model="form.name"
-                    :rules="rules.name"
-                    label="Name"
-                    required
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-text-field
-                    v-model="form.description"
-                    :rules="rules.description"
-                    label="Descriptions"
-                    required
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-text-field
-                    v-model="form.serialNumber"
-                    :rules="rules.serialNumber"
-                    label="SerialNumber"
-                    required
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-text-field
-                    v-model="form.categoryId"
-                    :rules="rules.categoryId"
-                    label="CategoryId"
-                    required
-                ></v-text-field>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-              class="red darken-1 white--text"
-              large
-              rounded
-              @click="hideUpdateDialog()"
-          >
-            <v-icon left>mdi-cancel</v-icon>
-            Cancel
-          </v-btn>
-          <v-btn
-              class="green darken-1 white--text"
-              large
-              rounded
-              @click="updateThings()"
-          >
-            <v-icon left>mdi-check</v-icon>
-            Update
-          </v-btn>
-        </v-card-actions>
-      </v-form>
+    <v-dialog v-model="updateDialog" width="600px">
+      <v-card>
+        <v-form ref="updateForm" lazy-validation>
+          <v-card-title>
+            <span class="text-h5">Update Thing</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                      v-model="form.name"
+                      :rules="rules.name"
+                      label="Name"
+                      required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                      v-model="form.description"
+                      :rules="rules.description"
+                      label="Descriptions"
+                      required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                      v-model="form.serialNumber"
+                      :rules="rules.serialNumber"
+                      label="SerialNumber"
+                      required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                      v-model="form.categoryId"
+                      :rules="rules.categoryId"
+                      label="CategoryId"
+                      required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                class="red darken-1 white--text"
+                large
+                rounded
+                @click="hideUpdateDialog()"
+            >
+              <v-icon left>mdi-cancel</v-icon>
+              Cancel
+            </v-btn>
+            <v-btn
+                class="green darken-1 white--text"
+                large
+                rounded
+                @click="updateThings()"
+            >
+              <v-icon left>mdi-check</v-icon>
+              Update
+            </v-btn>
+          </v-card-actions>
+        </v-form>
+      </v-card>
     </v-dialog>
   </v-container>
 </template>
@@ -252,8 +254,8 @@ export default {
       dialog: false,
       insertDialog: false,
       showMessageError: false,
-      showMessageDelete: false,
-      showMessageUpdate: false,
+      deleteDialog: false,
+      updateDialog: false,
       selectedThingToDelete: null,
       selectedThingToUpdate: null,
       search: "",
@@ -338,39 +340,24 @@ export default {
       }
     },
 
+
+    // Reset les champs pendant l'ajout d'un réservable
+    reset() {
+      this.$refs.insertForm.reset();
+    },
+
+
     /*
     DELETE SECTION
      */
 
     // Dialog pour suppression
     showDeleteDialog() {
-      this.showMessageDelete = true;
+      this.deleteDialog = true;
     },
 
     hideDeleteDialog() {
-      this.showMessageDelete = false;
-    },
-
-
-    // Dialog pour modifications
-    showUpdateDialog() {
-      this.showMessageUpdate = true;
-    },
-
-    hideUpdateDialog() {
-      this.showMessageUpdate = false;
-      this.form = {
-        name: null,
-        description: null,
-        serialNumber: null,
-        categoryId: null,
-      }
-      this.$refs.updateForm.reset()
-    },
-
-    // Reset les champs pendant l'ajout d'un réservable
-    reset() {
-      this.$refs.form.reset();
+      this.deleteDialog = false;
     },
 
     // Dialog pour les ereurs services
@@ -396,6 +383,39 @@ export default {
       }
     },
 
+    //Console log pour les items
+    selectItemToDelete(item) {
+      console.log(item);
+      this.selectedThingToDelete = item;
+      this.showDeleteDialog();
+    },
+
+    /*
+    UPDATE DIALOG
+     */
+
+    selectItemToUpdate(item) {
+      this.selectedThingToUpdate = item;
+      this.form = item;
+      this.showUpdateDialog();
+    },
+
+    // Dialog pour modifications
+    showUpdateDialog() {
+      this.updateDialog = true;
+    },
+
+    hideUpdateDialog() {
+      this.updateDialog = false;
+      this.form = {
+        name: null,
+        description: null,
+        serialNumber: null,
+        categoryId: null,
+      }
+      this.$refs.updateForm.reset()
+    },
+
     async updateThings() {
       try {
         if (this.selectedThingToUpdate) {
@@ -412,20 +432,6 @@ export default {
       }
     },
 
-    //Console log pour les items
-    bouttonAction(item) {
-      console.log(item);
-      this.selectedThingToDelete = item;
-      this.showDeleteDialog();
-    },
-
-
-    bouttonActionUpdate(item) {
-      console.log("List object", item);
-      this.selectedThingToUpdate = item;
-      this.form = item;
-      this.showUpdateDialog();
-    },
   },
 };
 </script>

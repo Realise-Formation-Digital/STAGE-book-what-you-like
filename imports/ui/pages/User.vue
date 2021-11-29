@@ -1,6 +1,6 @@
 <template>
   <v-container>
-   <!-- button -->
+    <!-- button -->
     <v-row>
       <v-col>
         <v-btn
@@ -28,7 +28,7 @@
       </v-col>
     </v-row>
 
-      <!-- data-table -->
+    <!-- data-table -->
     <v-row>
       <v-col>
         <v-data-table
@@ -39,10 +39,10 @@
         >
           <template v-slot:item.action="{ item }">
             <!-- Deux boutton pour supression et modification -->
-            <v-btn icon color="red" @click="bouttonAction(item)">
+            <v-btn icon color="red" @click="selectUserToDelete(item)">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
-            <v-btn icon color="dark" @click="bouttonActionUpdate(item)">
+            <v-btn icon color="dark" @click="selectUserToUpdate(item)">
               <v-icon>mdi-lead-pencil</v-icon>
             </v-btn>
           </template>
@@ -129,8 +129,8 @@
       </v-card>
     </v-dialog>
 
-          <!-- error dialog-->
-    <v-dialog v-model="showMessageError" max-width="600px">
+    <!-- error dialog-->
+    <v-dialog v-model="showMessageError" width="600px">
       <v-card>
         <v-card-text>Error</v-card-text>
         <v-card-actions>
@@ -143,7 +143,7 @@
     </v-dialog>
 
     <!-- dialog selected item to delete -->
-    <v-dialog v-model="showMessageDelete" max-width="600px">
+    <v-dialog v-model="deleteDialog" width="600px">
       <v-card>
         <v-card-text
         >Are you sure to delete
@@ -165,24 +165,68 @@
     </v-dialog>
 
     <!-- dialog to update -->
-    <v-dialog v-model="showMessageUpdate" max-width="600px">
+    <v-dialog v-model="updateDialog" width="600px">
       <v-card>
-        <v-card-text
-        >Are you sure to modify
-          {{
-            selectedUserToUpdate && selecteduserToUpdate.name
-          }}?
-        </v-card-text
-        >
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="error" class="mr-4" @click="updateUser()">
-            Yes
-          </v-btn>
-          <v-btn color="error" class="mr-4" @click="hideUpdateDialog()">
-            No
-          </v-btn>
-        </v-card-actions>
+        <v-form ref="updateForm" v-model="valid">
+          <v-card-title>
+            <span class="text-h5">Update User</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                      v-model="form.firstname"
+                      :rules="rules.firstname"
+                      label="FirstName"
+                      required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                      v-model="form.lastname"
+                      :rules="rules.lastname"
+                      label="LastName"
+                      required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                      v-model="form.role"
+                      :rules="rules.role"
+                      label="Role"
+                      required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                class="red darken-1 white--text"
+                large
+                rounded
+                @click="hideUpdateDialog()"
+            >
+              <v-icon left>mdi-cancel</v-icon>
+              Cancel
+            </v-btn>
+            <v-btn
+                class="green darken-1 white--text"
+                large
+                rounded
+                @click="updateUser()"
+            >
+              <v-icon left>mdi-check</v-icon>
+              Update
+            </v-btn>
+          </v-card-actions>
+        </v-form>
       </v-card>
     </v-dialog>
   </v-container>
@@ -190,6 +234,7 @@
 
 <script>
 import UserService from "../services/userService.js";
+
 export default {
   name: "User",
 
@@ -198,8 +243,8 @@ export default {
       dialog: false,
       insertDialog: false,
       showMessageError: false,
-      showMessageDelete: false,
-      showmessageUpdate: false,
+      deleteDialog: false,
+      updateDialog: false,
       selectedUserToDelete: null,
       selectedUserToUpdate: null,
       search: "",
@@ -215,11 +260,11 @@ export default {
           sortable: false,
           value: "name",
         },
-        { text: "FirstName", value: "firstname" },
-        { text: "LastName", value: "lastname" },
-        { text: "E-mail ", value: "email" },
-        { text: "Role", value: "role" },
-        { text: "Action ", value: "action" },
+        {text: "FirstName", value: "firstname"},
+        {text: "LastName", value: "lastname"},
+        {text: "E-mail ", value: "email"},
+        {text: "Role", value: "role"},
+        {text: "Action ", value: "action"},
       ],
       // Les reservables
       reservable: [
@@ -236,7 +281,7 @@ export default {
           role: "",
         },
       ],
-       // Les obligations pour ajouter un réservable
+      // Les obligations pour ajouter un réservable
       valid: true,
       name: "",
       rules: {
@@ -287,26 +332,17 @@ export default {
 
     // Dialog pour suppression
     showDeleteDialog() {
-      this.showMessageDelete = true;
+      this.deleteDialog = true;
     },
 
     hideDeleteDialog() {
-      this.showMessageDelete = false;
+      this.deleteDialog = false;
     },
 
-
-    // Dialog pour modifications
-    showUpdateDialog() {
-      this.showMessageUpdate = true;
-    },
-
-    hideUpdateDialog() {
-      this.showMessageUpdate = false;
-    },
 
     // Reset les champs pendant l'ajout d'un réservable
     reset() {
-      this.$refs.form.reset();
+      this.$refs.insertForm.reset();
     },
 
     // Dialog pour les ereurs services
@@ -321,7 +357,7 @@ export default {
     async deleteUser() {
       try {
         if (this.selectedUserToDelete) {
-          await ThingsService.deleteUser(this.selectedUserToDelete.id);
+          await UserService.deleteUser(this.selectedUserToDelete.id);
         }
       } catch (e) {
         console.error(
@@ -331,11 +367,44 @@ export default {
         this.showDialogError();
       }
     },
+
+    //Console log pour les items
+    selectUserToDelete(item) {
+      console.log(item);
+      this.selectedUserToDelete = item;
+      this.showDeleteDialog();
+    },
+
+    /*
+    UPDATE SECTION
+     */
+
+    selectUserToUpdate(item) {
+      console.log(item);
+      this.selectedUserToUpdate = item;
+      this.form = item
+      this.showUpdateDialog();
+    },
+
+    // Dialog pour modifications
+    showUpdateDialog() {
+      this.updateDialog = true;
+    },
+
+    hideUpdateDialog() {
+      this.updateDialog = false;
+      this.form = {
+        firstname: null,
+        lastname: null,
+        email: null,
+        role: null,
+      }
+    },
+
     async updateUser() {
       try {
         if (this.selectedUserToUpdate) {
           await UserService.updateUser(this.selectedUserToUpdate.id);
-          console.log(this.form);
         }
       } catch (e) {
         console.error(
@@ -345,32 +414,23 @@ export default {
         this.showDialogError();
       }
     },
-
-    //Console log pour les items
-    bouttonAction(item) {
-      console.log(item);
-      this.selectedUserToDelete = item;
-      this.showDeleteDialog();
-    },
-    bouttonActionUpdate(item) {
-      console.log(item);
-      this.selectedUserToUpdate = item;
-      this.showUpdateDialog();
-    },
   },
 };
 </script>
- 
+
 <style scoped>
 .margin-left {
   margin-left: 100px;
 }
+
 .margin-right {
   margin-right: 100px;
 }
+
 .search-padding {
   margin-right: 100px;
 }
+
 .btn-add {
   margin-top: 100px;
   margin-left: 100px;
