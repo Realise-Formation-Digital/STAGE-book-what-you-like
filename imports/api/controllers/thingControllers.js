@@ -3,8 +3,8 @@ import ThingModel from "../models/thingsModel";
 
 Meteor.methods({
 
-  //todo comment
-  /**
+  
+  /**Create a single thing
    *
    * @param {string} name
    * @param {string} description
@@ -45,13 +45,19 @@ Meteor.methods({
     }
   },
 
-  // todo do a good comment
-  // create method to modify thing
+ 
+  // update a single thing
+  /**
+   * 
+   * @param {string} id - id to update
+   * @param {object} objectToUpdate - object that contains all the changes
+   * @returns {promise<*>}
+   */
   async updateThing(id, objectToUpdate) {
     try {
       console.log('[Controller][Things][updateThing] Updating thing with params', id, objectToUpdate)
       let result = null
-      result = ThingModel.updateThing(name, description, reserved, serial_number, parkingType = null, hasCable, hasWhiteBoard, timestamp)
+      result = ThingModel.updateThing(id, objectToUpdate)
       return result
     } catch (e) {
       console.error('[Controller][Things][updateThing] An error occurred', e)

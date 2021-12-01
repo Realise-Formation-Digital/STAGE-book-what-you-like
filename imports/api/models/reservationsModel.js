@@ -60,7 +60,7 @@ class ReservationsModel {
       result = await ReservationDao.updateReservation(id, objectToUpdate)
       return result
     } catch (e) {
-      console.error('[ReservationsModel][updateReservation] An error occurred when updating reservation', e)
+      console.error('[Model][Reservations][updateReservation] An error occurred when updating reservation', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   }

@@ -49,17 +49,22 @@ class ReservationDao {
   /**
    * Update a single reservation
    * @param {string} id - id to update
-   * @param {object} objectToUpdate - update a single object
+   * @param {object} objectToUpdate - object to update
    * @return {Promise<void>}
    */
   static async updateReservation(id, objectToUpdate) {
     console.log('[DAO][Reservation][updateReservation] Updating reservation with params', id, objectToUpdate)
     try {
-      /*return ReservationsCollection.update({
-        name: name,
-        timestampFrom: timestampFrom,
-        timestampTo: timestampTo,
-      })*/ // todo
+      const{userId, thingId, categoryId, title, tsFrom, tsTo, ts} = objectToUpdate  
+      return ReservationsCollection.update({_id : id}, {
+        userId : userId,
+        thingId : thingId,
+        categoryId : categoryId,
+        title : title,
+        tsFrom: tsFrom,
+        tsTo: tsTo,
+        ts : ts
+      })
     } catch (e) {
       console.error('[DAO][Reservation][updateReservation] An error occurred when updating reservation in database', e)
       throw new Meteor.Error('0006', 'An error occurred in dao when updating reservation', e.detail)

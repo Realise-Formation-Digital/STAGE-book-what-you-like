@@ -2,23 +2,23 @@ import ThingsCollection from "../collections/thingsCollection";
 
 class ThingDao {
 
-  //todo comment
 
   /**
-   * Insert Link
-   * @param name {string} - title of the thing
-   * @param description {string} - description  of the thing
-   * @param imgId {string} - image of the thing
-   * @param reserved {Boolean} - if the thing is reserved or not
-   * @param serial_number {string} - serial number of the thing
-   * @param parkingType {string} - if location is
-   * @param hasCable {Boolean} - if the thing need a cable
-   * @param hasWhiteBoard {Boolean} - if needed a whiteboard
-   * @param ts
+   * Insert a single thing
+   * @param {string} name - title of the thing
+   * @param {string} description - description  of the thing
+   * @param {string} imgId  - image of the thing
+   * @param {Boolean} reserved  - if the thing is reserved or not
+   * @param {string} serial_number  - serial number of the thing
+   * @param {string} categoryId - categoryId of the thing
+   * @param {string} parkingType  - if location is
+   * @param {Boolean} hasCable  - if the thing need a cable
+   * @param {Boolean} hasWhiteBoard  - if needed a whiteboard
+   * @param {number} ts - date of insertion of a thing
    * @returns {Promise<*>}
    */
-  static async insertThing(name, description, imgId, reserved, serial_number, parkingType, hasCable, hasWhiteBoard, ts) {
-    console.log('[DAO][ThingDao][insertThing] Inserting thing with params', name, description, imgId, reserved, serial_number, parkingType, hasCable, hasWhiteBoard, ts)
+  static async insertThing(name, description, imgId, reserved, serial_number, categoryId, parkingType, hasCable, hasWhiteBoard, ts) {
+    console.log('[DAO][ThingDao][insertThing] Inserting thing with params', name, description, imgId, reserved, serial_number,categoryId, parkingType, hasCable, hasWhiteBoard, ts)
     try {
       return ThingsCollection.insert({
         name: name,
@@ -26,11 +26,11 @@ class ThingDao {
         imgId: imgId,
         reserved: reserved,
         serial_number: serial_number,
-        categoryId: categoryId, //todo il s'est perdu? :)
+        categoryId: categoryId, 
         parkingType: parkingType,
         hasCable: hasCable,
         hasWhiteBoard: hasWhiteBoard,
-        timestamp: ts,
+        ts: ts,
 
       })
     } catch (e) {
@@ -63,7 +63,7 @@ class ThingDao {
    * @return {Promise<any>}
    */
   static async updateThing(id, objectToUpdate) {
-    console.log('[ThingDao][updateThing] Updating thing with params', id, objectToUpdate)
+    console.log('[DAO][Thing][updateThing] Updating thing with params', id, objectToUpdate)
     try {
       const {name, description, imgId, reserved, serialNumber, categoryId, parkingType, hasCable, hasWhiteboard, ts} = objectToUpdate
       return ThingsCollection.update({_id: id}, {
@@ -80,7 +80,7 @@ class ThingDao {
 
       })
     } catch (e) {
-      console.error('[ThingDao][updateThing] An error occurred when updating thing in database', e)
+      console.error('[DAO][Thing][updateThing] An error occurred when updating thing in database', e)
       throw new Meteor.Error('0009', 'An error occurred in dao when updating thing', e.detail)
     }
   }

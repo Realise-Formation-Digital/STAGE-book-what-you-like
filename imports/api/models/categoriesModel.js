@@ -56,7 +56,7 @@ class CategoriesModel {
       result = await CategoryDao.updateCategory(id, objectToUpdate)
       return result
     }catch (e) {
-      console.error('[CategoriesModel][updateCategory] An error occurred when updating category', e)
+      console.error('[Model][Categories][updateCategory] An error occurred when updating category', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   }
