@@ -3,53 +3,69 @@
     <v-row>
       <v-col>
         <v-btn
-            large
-            rounded
-            color="green darken-1 white--text"
-            @click="showInsertDialog()">
+          large
+          rounded
+          color="green darken-1 white--text"
+          @click="showInsertDialog()"
+        >
           <v-icon left>mdi-plus</v-icon>
           Add Category
         </v-btn>
-
       </v-col>
     </v-row>
     <v-row>
       <v-col></v-col>
       <v-col>
         <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            hide-details
+          v-model="search"
+          append-icon="mdi-magnify"
+          :label="getTranslation('search')"
+          single-line
+          hide-details
         ></v-text-field>
       </v-col>
     </v-row>
     <v-row>
       <v-col>
         <v-data-table
-            :headers="headers"
-            :items="categoriesList"
-            :search="search"
-            :items-per-page="5"
-            class="elevation-1"
+          :headers="headers"
+          :items="categoriesList"
+          :search="search"
+          :items-per-page="5"
+          class="elevation-1"
         >
           <template v-slot:item.actions="{ item }">
             <v-btn icon color="orange">
               <v-icon
-                  icon
-                  color="orange"
-                  @click="selectItemToUpdateAndOpenDialog(item)">
+                icon
+                color="orange"
+                @click="selectItemToUpdateAndOpenDialog(item)"
+              >
                 mdi-pencil
               </v-icon>
             </v-btn>
             <v-btn
-                icon
-                color="red"
-                @click="selectItemToDeleteAndOpenDialog(item)"
+              icon
+              color="red"
+              @click="selectItemToDeleteAndOpenDialog(item)"
             >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
+          </template>
+
+          <template scope="">
+            <v-btn
+              class="blue--text darken-1"
+              flat
+              @click="dialogupdate = false"
+              >closeDialog</v-btn
+            >
+            <v-btn
+              class="blue--text darken-1"
+              flat
+              @click="dialogupdate = false"
+              >closeDialog</v-btn
+            >
           </template>
         </v-data-table>
       </v-col>
@@ -59,25 +75,24 @@
     <v-dialog v-model="dialogDelete" max-width="600px">
       <v-card>
         <v-card-title class="text-h5"
-        >Are you sure you want to delete the name<br>
+          >Are you sure you want to delete the name<br />
           {{ itemToDelete && itemToDelete.name }}?
-        </v-card-title
-        >
+        </v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-              large
-              rounded
-              class="red darken-1 white--text"
-              @click="closeDialogAndCleanVariables()"
-          >Cancel
-          </v-btn
-          >
+            large
+            rounded
+            class="red darken-1 white--text"
+            @click="closeDialogAndCleanVariables()"
+            >Cancel
+          </v-btn>
           <v-btn
-              rounded
-              large
-              class="green darken-1 white--text"
-              @click="deleteSelectedItem()">
+            rounded
+            large
+            class="green darken-1 white--text"
+            @click="deleteSelectedItem()"
+          >
             OK
           </v-btn>
           <v-spacer></v-spacer>
@@ -95,17 +110,17 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
-                    v-model="form.name"
-                    label="Name*"
-                    :rules="[rules.required]"
-                    required
+                  v-model="form.name"
+                  :label="getTranslation('Name')"
+                  :rules="[rules.required]"
+                  required
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-text-field
-                    v-model="form.description"
-                    label="Desciption*"
-                    required
+                  v-model="form.description"
+                   :label="getTranslation('description')"
+                  required
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -113,18 +128,10 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-              color="green darken-1"
-              text
-              @click="hideInsertDialog()"
-          >
+          <v-btn color="green darken-1" text @click="hideInsertDialog()">
             Cancel
           </v-btn>
-          <v-btn
-              color="green darken-1"
-              text
-              @click="insertCategory()"
-          >
+          <v-btn color="green darken-1" text @click="getTranslationin('sertCategory')()">
             Agree
           </v-btn>
         </v-card-actions>
@@ -140,17 +147,17 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
-                    v-model="form.name"
-                    label="Name*"
-                    :rules="[rules.required, rules.counter]"
-                    required
+                  v-model="form.name"
+                 :label="getTranslation('Name')"
+                  :rules="[rules.required, rules.counter]"
+                  required
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-text-field
-                    v-model="form.description"
-                    label="Description*"
-                    required
+                  v-model="form.description"
+                 :label="getTranslation('description')"
+                  required
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -159,20 +166,20 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-              large
-              rounded
-              class="red darken-1 white--text"
-              text
-              @click="hideUpdateDialog()"
+            large
+            rounded
+            class="red darken-1 white--text"
+            text
+            @click="hideUpdateDialog()"
           >
             Cancel
           </v-btn>
           <v-btn
-              large
-              rounded
-              class="green darken-1 white--text"
-              text
-              @click="updateCategory()"
+            large
+            rounded
+            class="green darken-1 white--text"
+            text
+            @click="updateCategory()"
           >
             Update
           </v-btn>
@@ -202,7 +209,7 @@ export default {
       },
       rules: {
         required: (value) => !!value || "Required.",
-        counter: (value) => value && value.length <= 5 || "Max 5 characters",
+        counter: (value) => (value && value.length <= 5) || "Max 5 characters",
       },
       headers: [
         {
@@ -211,21 +218,21 @@ export default {
           sortable: false,
           value: "name",
         },
-        {text: "description", value: "description"},
-        {text: "ts", value: "ts"},
-        {text: "Actions", value: "actions", sortable: false},
+        { text: "description", value: "description" },
+        { text: "ts", value: "ts" },
+        { text: "Actions", value: "actions", sortable: false },
       ],
       itemToDelete: null,
     };
   },
   meteor: {
     $subscribe: {
-      'categoriesList': []
+      categoriesList: [],
     },
     categoriesList() {
-      console.log("Categories", categoriesCollection.find().fetch())
-      return categoriesCollection.find().fetch()
-    }
+      console.log("Categories", categoriesCollection.find().fetch());
+      return categoriesCollection.find().fetch();
+    },
   },
   methods: {
     customError() {
@@ -252,21 +259,20 @@ export default {
 
     async insertCategory() {
       try {
-        this.getTranslation()
-        const ts = this.getUnixTs()
+        this.getTranslation();
+        const ts = this.getUnixTs();
         await CategoryService.insertCategory(
-            this.form.name,
-            this.form.description,
+          this.form.name,
+          this.form.description
         );
         this.hideInsertDialog();
       } catch (e) {
         console.error(
-            "[Component][Category][insertCategory] An error occurred when inert category",
-            e
+          "[Component][Category][insertCategory] An error occurred when inert category",
+          e
         );
       }
     },
-
 
     /*
       DELETE SECTION
@@ -289,8 +295,8 @@ export default {
         this.closeDialogAndCleanVariables();
       } catch (e) {
         console.error(
-            "[Component][Category][deleteSelectedItem] An error occurred when inert Category",
-            e
+          "[Component][Category][deleteSelectedItem] An error occurred when inert Category",
+          e
         );
       }
     },
@@ -300,34 +306,35 @@ export default {
      */
 
     selectItemToUpdateAndOpenDialog(item) {
-      this.form = item
-      this.showUpdateDialog()
+      this.form = item;
+      this.showUpdateDialog();
     },
 
     showUpdateDialog() {
-      this.updateDialog = true
+      this.updateDialog = true;
     },
 
     hideUpdateDialog() {
-      this.updateDialog = false
+      this.updateDialog = false;
       this.form = {
         name: null,
         description: null,
-      }
+      };
     },
 
     async updateCategory() {
       try {
-        console.log('[Component][updateCategory] Updating category')
-        let result = null
-        result = await CategoryService.updateCategory()
+        console.log("[Component][updateCategory] Updating category");
+        let result = null;
+        result = await CategoryService.updateCategory();
       } catch (e) {
-        console.error('[Component][updateCategory] An error occurred when updating a category', e)
+        console.error(
+          "[Component][updateCategory] An error occurred when updating a category",
+          e
+        );
       }
-    }
-
+    },
   },
-
 };
 </script>
 <style>

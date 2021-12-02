@@ -1,13 +1,19 @@
+import dayjs  from "dayjs"
+
 const dateMixin = {
   methods: {
-    getUnixTs () {
+    getUnixTs() {
       return new Date().getTime()
     },
 
-    getUnixTsByDate(date){
+    getUnixTsByDate(date) {
       return new Date(date).getTime()
+    },
+    getTs (date){
+      return dayjs(date)
     }
+    }
+
   }
-}
 
 export default dateMixin
