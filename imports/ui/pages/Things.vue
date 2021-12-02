@@ -41,12 +41,18 @@
         >
           <template v-slot:item.action="{ item }">
             <!-- Deux boutton pour supression et modification -->
+             <v-btn icon color="orange" @click="selectItemToUpdate(item)">
+              <v-icon>mdi-lead-pencil</v-icon>
+            </v-btn>
             <v-btn icon color="red" @click="selectItemToDelete(item)">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
-            <v-btn icon color="orange" @click="selectItemToUpdate(item)">
-              <v-icon>mdi-lead-pencil</v-icon>
-            </v-btn>
+           
+          </template>
+          <template v-slot:item.ts="{item}">
+            <v-chip>
+              {{getTs(item.ts)}}
+            </v-chip>
           </template>
         </v-data-table
         >
@@ -245,9 +251,13 @@
 
 <script>
 import ThingsService from "../services/thingsService.js";
+import i18nMixin from "../mixins/i18n";
+import dateMixin from "../mixins/date";
+import dayjs from "dayjs";
 
 export default {
   name: "Things",
+  mixins: [i18nMixin, dateMixin],
 
   data() {
     return {
@@ -276,6 +286,7 @@ export default {
         {text: "Description", value: "description"},
         {text: "Reserved ", value: "reserved"},
         {text: "CategoryId", value: "categoryId"},
+        {text: "ts", value: "ts"},
         {text: "Action ", value: "action"},
       ],
       // Les reservables

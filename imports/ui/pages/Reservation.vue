@@ -531,7 +531,7 @@ export default {
         this.cancelInsertReservation()
       } catch (e) {
         console.log("[Component][Reservation][updateReservation] An error occurred when updating reservation", e)
-        //todo something
+        
       }
     }
   },
