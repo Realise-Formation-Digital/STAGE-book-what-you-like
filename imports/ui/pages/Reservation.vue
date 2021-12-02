@@ -130,11 +130,10 @@
                     required
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12"> </v-col>
                 <v-col cols="12">
                   <v-menu
-                    ref="menu"
-                    v-model="menu"
+                    ref="menufrom"
+                    v-model="menufrom"
                     :close-on-content-click="false"
                     transition="scale-transition"
                     offset-y
@@ -142,7 +141,7 @@
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
-                        v-model="date"
+                        v-model="datefrom"
                         label="from"
                         prepend-icon="mdi-calendar"
                         readonly
@@ -150,53 +149,31 @@
                         v-on="on"
                       ></v-text-field>
                     </template>
-                    <v-date-picker
-                      v-model="date"
-                      :active-picker.sync="activePicker"
-                      :max="
-                        new Date(
-                          Date.now() - new Date().getTimezoneOffset() * 60000
-                        )
-                          .toISOString()
-                          .substr(0, 10)
-                      "
-                      min="1950-01-01"
-                      @change="save"
-                    ></v-date-picker>
+                    <v-date-picker v-model="datefrom"></v-date-picker>
                   </v-menu>
                 </v-col>
-                <v-menu
-                  ref="menu"
-                  v-model="menu"
-                  :close-on-content-click="false"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="auto"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                      v-model="date"
-                      label="to"
-                      prepend-icon="mdi-calendar"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="date"
-                    :active-picker.sync="activePicker"
-                    :max="
-                      new Date(
-                        Date.now() - new Date().getTimezoneOffset() * 60000
-                      )
-                        .toISOString()
-                        .substr(0, 10)
-                    "
-                    min="1950-01-01"
-                    @change="save"
-                  ></v-date-picker>
-                </v-menu>
+                <v-col cols="12">
+                  <v-menu
+                    ref="menuto"
+                    v-model="menuto"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="dateto"
+                        label="to"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker v-model="dateto"></v-date-picker>
+                  </v-menu>
+                </v-col>
               </v-row>
             </v-container>
           </v-card-text>
@@ -265,7 +242,7 @@
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
-                        v-model="date"
+                        v-model="form.from"
                         label="from"
                         prepend-icon="mdi-calendar"
                         readonly
@@ -274,7 +251,7 @@
                       ></v-text-field>
                     </template>
                     <v-date-picker
-                      v-model="date"
+                      v-model="form"
                       :active-picker.sync="activePicker"
                       :max="
                         new Date(
@@ -289,37 +266,37 @@
                   </v-menu>
                 </v-col>
                 <v-menu
-                    ref="menu"
-                    v-model="menu"
-                    :close-on-content-click="false"
-                    transition="scale-transition"
-                    offset-y
-                    min-width="auto"
-                  >
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-text-field
-                        v-model="date"
-                        label="to"
-                        prepend-icon="mdi-calendar"
-                        readonly
-                        v-bind="attrs"
-                        v-on="on"
-                      ></v-text-field>
-                    </template>
-                    <v-date-picker
-                      v-model="date"
-                      :active-picker.sync="activePicker"
-                      :max="
-                        new Date(
-                          Date.now() - new Date().getTimezoneOffset() * 60000
-                        )
-                          .toISOString()
-                          .substr(0, 10)
-                      "
-                      min="1950-01-01"
-                      @change="save"
-                    ></v-date-picker>
-                  </v-menu>
+                  ref="menu"
+                  v-model="form"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="form.to"
+                      label="to"
+                      prepend-icon="mdi-calendar"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="form"
+                    :active-picker.sync="activePicker"
+                    :max="
+                      new Date(
+                        Date.now() - new Date().getTimezoneOffset() * 60000
+                      )
+                        .toISOString()
+                        .substr(0, 10)
+                    "
+                    min="1950-01-01"
+                    @change="save"
+                  ></v-date-picker>
+                </v-menu>
               </v-row>
             </v-container>
           </v-card-text>
@@ -350,6 +327,7 @@
   </v-container>
 </template>
 <script>
+
 import ReservationService from "../services/reservationService.js";
 import i18nMixin from "../mixins/i18n";
 import dateMixin from "../mixins/date";
@@ -366,7 +344,11 @@ export default {
       updateDialog: false,
       actions: false,
       activePicker: null,
-      date: false,
+      date: null,
+      menu: false,
+      activePicker: null,
+      due: null,
+      date: null,
       menu: false,
       form: {
         from: null,
@@ -418,20 +400,30 @@ export default {
         },
       ],
       itemToDelete: null,
-      
     };
   },
-  
+  watch: {
+    menu(val) {
+      val && setTimeout(() => (this.activePicker = "YEAR"));
+    },
+  },
+
   methods: {
     async deleteItemConfirm(item) {
       alert(JSON.stringify(item));
       console.log(item);
-      
-
     },
-    save (date) {
-        this.$refs.menu.save(date)
-      },
+    computed:{
+      formatteDate(){
+       return this.due
+      }
+    },
+    testDatePicker() {
+      console.log("test");
+    },
+    save(date) {
+      this.$refs.menu.save(date);
+    },
     /*
     INSERT SECTION
     */
@@ -450,6 +442,14 @@ export default {
         category: null,
       };
     },
+    hideInsertDialog() {
+      this.insertDialog = false;
+      this.data = {
+        from: null,
+        to: null,
+       
+      };
+    },
 
     cancelInsertReservation() {
       this.hideInsertDialog();
@@ -457,7 +457,7 @@ export default {
 
     async insertReservation() {
       try {
-        console.log("Insert Reservation", this.form );
+        console.log("Insert Reservation", this.form);
 
         await ReservationService.insertReservation(
           this.form.from,
@@ -526,6 +526,8 @@ export default {
 
     selectItemToUpdateAndOpenDialog(item) {
       this.form = item;
+      this.menui = item;
+
       this.showUpdateDialog();
     },
 
