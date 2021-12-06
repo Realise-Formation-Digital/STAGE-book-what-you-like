@@ -11,19 +11,19 @@ class ThingDao {
    * @param {Boolean} reserved  - if the thing is reserved or not
    * @param {string} serial_number  - serial number of the thing
    * @param {string} categoryId - categoryId of the thing
-   * @param {string} parkingType  - if location is
-   * @param {Boolean} hasCable  - if the thing need a cable
-   * @param {Boolean} hasWhiteBoard  - if needed a whiteboard
+   * @param {boolean} parkingType  - if location is
+   * @param {boolean} hasCable  - if the thing need a cable
+   * @param {boolean} hasWhiteBoard  - if needed a whiteboard
    * @param {number} ts - date of insertion of a thing
    * @returns {Promise<*>}
    */
-  static async insertThing(name, description, imgId, reserved, serial_number, categoryId, parkingType, hasCable, hasWhiteBoard, ts) {
-    console.log('[DAO][ThingDao][insertThing] Inserting thing with params', name, description, imgId, reserved, serial_number,categoryId, parkingType, hasCable, hasWhiteBoard, ts)
+  static async insertThing(name, description, reserved, serial_number, parkingType, hasCable, hasWhiteBoard, ts, categoryId) {
+    console.log('[DAO][ThingDao][insertThing] Inserting thing with params', name, description, reserved, serial_number,categoryId, parkingType, hasCable, hasWhiteBoard, ts)
     try {
       return ThingsCollection.insert({
         name: name,
         description: description,
-        imgId: imgId,
+        //imgId: imgId,
         reserved: reserved,
         serial_number: serial_number,
         categoryId: categoryId, 
