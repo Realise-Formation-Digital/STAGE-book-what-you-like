@@ -1,5 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import ReservationsModel from "../models/reservationsModel";
+import Date from "../libs/Date";
 
 Meteor.methods({
 
@@ -17,7 +18,9 @@ Meteor.methods({
       console.log('[Controller][Reservation][insertReservation] Inserting reservation with params', title, thingId, categoryId, tsFrom, tsTo)
       let result = null
       const userId = null
-      const ts = new Date().getTime()
+      const ts = Date.getTs()
+      tsFrom = Date.getTSbyDate(tsFrom)
+      tsTo = Date.getTSbyDate(tsTo)
       result = ReservationsModel.insertReservation(userId, thingId, categoryId, title, tsFrom, tsTo, ts)
       return result
     } catch (e) {

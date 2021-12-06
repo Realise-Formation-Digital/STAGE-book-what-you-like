@@ -18,8 +18,8 @@ const meteorMethods = {
   },
   reservation: {
     insert:'insertReservation',
-    update:'removeReservation',
-    delete:'updateReservation'
+    update:'updateReservation',
+    delete:'removeReservation'
   },
   thing: {
     insert:'insertThing',
