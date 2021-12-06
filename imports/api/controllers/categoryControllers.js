@@ -1,5 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import CategoriesModel from "../models/categoriesModel";
+import Date from "../libs/Date";
+import Mail from "../libs/Mail";
 
 Meteor.methods({
 
@@ -13,7 +15,7 @@ Meteor.methods({
     try {
       console.log('[Controller][Categories][insertCategory] Inserting category with params', name, description)
       let result = null
-      let ts = new Date().getTime()
+      let ts = Date.getTs();
       result = CategoriesModel.insertCategory(name, description, ts)
       return result
     } catch (e) {
