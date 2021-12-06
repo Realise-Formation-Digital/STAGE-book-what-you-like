@@ -1,5 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import ThingModel from "../models/thingsModel";
+import Date from "../libs/Date.js";
 
 Meteor.methods({
 
@@ -19,7 +20,7 @@ Meteor.methods({
     try {
       console.log('[Controller][Things][insertThing] Inserting reservation with params', name, description, reserved, serial_number, parkingType, hasCable, hasWhiteBoard)
       let result = null
-      const ts = new Date().getTime()
+      const ts = Date.getTs();
       result = ThingModel.insertThing(name, description, reserved, serial_number, hasCable, hasWhiteBoard, ts)
       return result
     } catch (e) {
@@ -37,7 +38,7 @@ Meteor.methods({
     try {
       console.log('[Controller][Things][removeThing] Removing thing with params', id)
       let result = null
-      result = ThingModel.removeThing(_id)
+      result = ThingModel.removeThing(id)
       return result
     } catch (e) {
       console.error('[Controller][Things][removeThing] An error occurred', e)

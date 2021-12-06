@@ -1,4 +1,5 @@
 import ThingDao from "../daos/thingDao";
+import Mail from "../libs/Mail";
 
 /**
  * @class
@@ -21,9 +22,11 @@ class ThingsModel {
    */
   static async insertThing(name, description, reserved, serialNumber, parkingType, hasCable, hasWhiteBoard, ts) {
     try {
-      console.log('[Model][Things][insertThing] Inserting reservation with params', ame, description, reserved, serialNumber, parkingType, hasCable, hasWhiteBoard, ts)
+      console.log('[Model][Things][insertThing] Inserting reservation with params', name, description, reserved, serialNumber, parkingType, hasCable, hasWhiteBoard, ts)
       let result = null
+      
       result = ThingDao.insertThing(name, description, reserved, serialNumber, parkingType, hasCable, hasWhiteBoard, ts)
+      Mail.sendEmail('your thing is inserted')
       return result
     } catch (e) {
       console.error('[Model][Things][insertThing] An error occurred when inserting thing', e)
@@ -41,6 +44,7 @@ class ThingsModel {
       console.log('[Model][Things][removeThing] Removing thing with params', id)
       let result = null
       result = await ThingDao.removeThing(id)
+      Mail.sendEmail('Your thing is removed')
       return result
     } catch (e) {
       console.error('[Model][Things][removeThing] An error occurred when removing thing', e)
@@ -59,6 +63,7 @@ class ThingsModel {
       console.log('[Model][Things][updateThing] Removing thing with params', id, objectToUpdate)
       let result = null
       result = await ThingDao.updateThing(id, objectToUpdate)
+      Mail.sendEmail('Your thing is updated')
       return result
     } catch (e) {
       console.error('[Model][Things][updateThing] An error occurred when update thing', e)

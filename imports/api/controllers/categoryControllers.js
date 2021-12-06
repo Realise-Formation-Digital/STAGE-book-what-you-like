@@ -1,7 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import CategoriesModel from "../models/categoriesModel";
-import Date from "../libs/Date";
-import Mail from "../libs/Mail";
+import Date from "../libs/Date.js";
 
 Meteor.methods({
 
