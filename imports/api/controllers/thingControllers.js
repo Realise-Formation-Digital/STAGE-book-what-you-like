@@ -13,14 +13,15 @@ Meteor.methods({
    * @param {boolean} parkingType
    * @param {boolean} hasCable
    * @param {boolean} hasWhiteBoard
+   * @param {string} categoryId - category id's thing
    * @returns {Promise<*>}
    */
-  async insertThing(name, description, reserved, serial_number, parkingType = null, hasCable, hasWhiteBoard) {
+  async insertThing(name, description, reserved, serial_number, parkingType = false, hasCable, hasWhiteBoard, categoryId) {
     try {
-      console.log('[Controller][Things][insertThing] Inserting reservation with params', name, description, reserved, serial_number, parkingType, hasCable, hasWhiteBoard)
+      console.log('[Controller][Things][insertThing] Inserting reservation with params', name, description, reserved, serial_number, parkingType, hasCable, hasWhiteBoard, categoryId)
       let result = null
       const ts = new Date().getTime()
-      result = ThingModel.insertThing(name, description, reserved, serial_number, hasCable, hasWhiteBoard, ts)
+      result = ThingModel.insertThing(name, description, reserved, serial_number, parkingType, hasCable, hasWhiteBoard, ts, categoryId)
       return result
     } catch (e) {
       console.error('[Controller][Things][insertThing] An error occurred', e)
@@ -30,14 +31,14 @@ Meteor.methods({
 
   /**
    * Removing a single reservation
-   * @param {string} _id
+   * @param {string} id
    * @returns
    */
   async removeThing(id) {
     try {
       console.log('[Controller][Things][removeThing] Removing thing with params', id)
       let result = null
-      result = ThingModel.removeThing(_id)
+      result = ThingModel.removeThing(id)
       return result
     } catch (e) {
       console.error('[Controller][Things][removeThing] An error occurred', e)
