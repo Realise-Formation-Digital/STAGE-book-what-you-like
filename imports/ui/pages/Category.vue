@@ -13,6 +13,7 @@
         </v-btn>
       </v-col>
     </v-row>
+    
     <v-row>
       <v-col></v-col>
       <v-col>
@@ -34,6 +35,7 @@
           :items-per-page="5"
           class="elevation-1"
         >
+        
           <template v-slot:item.actions="{ item }">
             <v-btn icon color="orange">
               <v-icon
@@ -67,6 +69,7 @@
               >closeDialog</v-btn
             >
           </template>
+          
         </v-data-table>
       </v-col>
     </v-row>
