@@ -1,14 +1,13 @@
 <template>
   <div>
-    <v-app-bar
-        dark
-        app
-    >
+    <v-app-bar dark app>
       <v-app-bar-nav-icon @click="onShowHideSidenav()"></v-app-bar-nav-icon>
 
       <v-toolbar-title>Book what you want!</v-toolbar-title>
 
       <v-spacer></v-spacer>
+      <v-btn x-small color="secondary" dark @click="getTranslation()"> fr </v-btn>
+      <v-btn x-small color="secondary" dark @click="getTranslation()"> en </v-btn>
 
       <v-btn icon to="/">
         <v-icon>mdi-home</v-icon>
@@ -29,23 +28,25 @@
       </v-btn>
     </v-app-bar>
 
-    <Sidebar ref="sidebar"/>
+    <Sidebar ref="sidebar" />
   </div>
 </template>
 
 <script>
+import i18nMixin from "../mixins/i18n";
 import Sidebar from "./Sidebar";
+
 export default {
+  mixins: [i18nMixin],
   name: "Navbar",
-  components: {Sidebar},
+  components: { Sidebar },
   methods: {
-    onShowHideSidenav(){
-      this.$refs.sidebar.showHideSidenav()
-    }
-  }
-}
+    onShowHideSidenav() {
+      this.$refs.sidebar.showHideSidenav();
+    },
+  },
+};
 </script>
 
 <style scoped>
-
 </style>

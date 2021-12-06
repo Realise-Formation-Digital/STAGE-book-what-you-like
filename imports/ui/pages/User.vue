@@ -4,10 +4,11 @@
     <v-row>
       <v-col>
         <v-btn
-            large
-            rounded
-            class="green darken-1 white--text"
-            @click="showInsertDialog()">
+          large
+          rounded
+          class="green darken-1 white--text"
+          @click="showInsertDialog()"
+        >
           <v-icon left>mdi-plus</v-icon>
           Insert User
         </v-btn>
@@ -18,12 +19,12 @@
       <v-col></v-col>
       <v-col>
         <v-text-field
-            class="search-padding"
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            hide-details
+          class="search-padding"
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
         ></v-text-field>
       </v-col>
     </v-row>
@@ -32,23 +33,28 @@
     <v-row>
       <v-col>
         <v-data-table
-            class="margin-left margin-right"
-            :headers="headers"
-            :items="reservable"
-            :search="search"
+          class="margin-left margin-right"
+          :headers="headers"
+          :items="reservable"
+          :search="search"
         >
           <template v-slot:item.action="{ item }">
             <!-- Deux boutton pour supression et modification -->
+            <v-btn icon color="orange" @click="selectUserToUpdate(item)">
+              <v-icon>mdi-lead-pencil</v-icon>
+            </v-btn>
             <v-btn icon color="red" @click="selectUserToDelete(item)">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
-            <v-btn icon color="dark" @click="selectUserToUpdate(item)">
-              <v-icon>mdi-lead-pencil</v-icon>
-            </v-btn>
+            
           </template>
           >
-        </v-data-table
-        >
+          <template v-slot:item.ts="{ item }">
+            <v-chip>
+              {{ getTs(item.ts) }}
+            </v-chip>
+          </template>
+        </v-data-table>
       </v-col>
     </v-row>
 
@@ -65,40 +71,40 @@
               <v-row>
                 <v-col>
                   <v-text-field
-                      v-model="form.firstname"
-                      :rules="rules.firstname"
-                      label="FirstName"
-                      required
+                    v-model="form.firstname"
+                    :rules="rules.firstname"
+                    label="FirstName"
+                    required
                   ></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
                   <v-text-field
-                      v-model="form.lastname"
-                      :rules="rules.lastname"
-                      label="LastName"
-                      required
+                    v-model="form.lastname"
+                    :rules="rules.lastname"
+                    label="LastName"
+                    required
                   ></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
                   <v-text-field
-                      v-model="form.email"
-                      :rules="rules.email"
-                      label="E-mail"
-                      required
+                    v-model="form.email"
+                    :rules="rules.email"
+                    label="E-mail"
+                    required
                   ></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
                   <v-text-field
-                      v-model="form.role"
-                      :rules="rules.role"
-                      label="Role"
-                      required
+                    v-model="form.role"
+                    :rules="rules.role"
+                    label="Role"
+                    required
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -107,19 +113,19 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
-                class="red darken-1 white--text"
-                large
-                rounded
-                @click="hideInsertDialog()"
+              class="red darken-1 white--text"
+              large
+              rounded
+              @click="hideInsertDialog()"
             >
               <v-icon left>mdi-cancel</v-icon>
               Cancel
             </v-btn>
             <v-btn
-                class="green darken-1 white--text"
-                large
-                rounded
-                @click="insertUser()"
+              class="green darken-1 white--text"
+              large
+              rounded
+              @click="insertUser()"
             >
               <v-icon left>mdi-check</v-icon>
               Insert
@@ -146,17 +152,12 @@
     <v-dialog v-model="deleteDialog" width="600px">
       <v-card>
         <v-card-text
-        >Are you sure to delete
-          {{
-            selectedUserToDelete && selectedUserToDelete.name
-          }}?
-        </v-card-text
-        >
+          >Are you sure to delete
+          {{ selectedUserToDelete && selectedUserToDelete.name }}?
+        </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="error" class="mr-4" @click="deleteUser()">
-            Yes
-          </v-btn>
+          <v-btn color="error" class="mr-4" @click="deleteUser()"> Yes </v-btn>
           <v-btn color="error" class="mr-4" @click="hideDeleteDialog()">
             No
           </v-btn>
@@ -176,30 +177,30 @@
               <v-row>
                 <v-col>
                   <v-text-field
-                      v-model="form.firstname"
-                      :rules="rules.firstname"
-                      label="FirstName"
-                      required
+                    v-model="form.firstname"
+                    :rules="rules.firstname"
+                    label="FirstName"
+                    required
                   ></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
                   <v-text-field
-                      v-model="form.lastname"
-                      :rules="rules.lastname"
-                      label="LastName"
-                      required
+                    v-model="form.lastname"
+                    :rules="rules.lastname"
+                    label="LastName"
+                    required
                   ></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
                   <v-text-field
-                      v-model="form.role"
-                      :rules="rules.role"
-                      label="Role"
-                      required
+                    v-model="form.role"
+                    :rules="rules.role"
+                    label="Role"
+                    required
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -208,19 +209,19 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
-                class="red darken-1 white--text"
-                large
-                rounded
-                @click="hideUpdateDialog()"
+              class="red darken-1 white--text"
+              large
+              rounded
+              @click="hideUpdateDialog()"
             >
               <v-icon left>mdi-cancel</v-icon>
               Cancel
             </v-btn>
             <v-btn
-                class="green darken-1 white--text"
-                large
-                rounded
-                @click="updateUser()"
+              class="green darken-1 white--text"
+              large
+              rounded
+              @click="updateUser()"
             >
               <v-icon left>mdi-check</v-icon>
               Update
@@ -234,9 +235,14 @@
 
 <script>
 import UserService from "../services/userService.js";
+import i18nMixin from "../mixins/i18n";
+import dateMixin from "../mixins/date";
+import dayjs from "dayjs";
+import userCollection from "../collections/userCollection";
 
 export default {
   name: "User",
+  mixins: [i18nMixin, dateMixin],
 
   data() {
     return {
@@ -260,11 +266,13 @@ export default {
           sortable: false,
           value: "name",
         },
-        {text: "FirstName", value: "firstname"},
-        {text: "LastName", value: "lastname"},
-        {text: "E-mail ", value: "email"},
-        {text: "Role", value: "role"},
-        {text: "Action ", value: "action"},
+        { text: "FirstName", value: "firstname" },
+        { text: "LastName", value: "lastname" },
+        { text: "E-mail ", value: "email" },
+        { text: "Role", value: "role" },
+        { text: "ts", value: "ts" },
+
+        { text: "Action ", value: "action" },
       ],
       // Les reservables
       reservable: [
@@ -289,8 +297,17 @@ export default {
         lastname: [(v) => !!v || "LastName is required"],
         email: [(v) => !!v || "E-mail is required"],
         role: [(v) => !!v || "Role is required"],
-      }
+      },
     };
+  },
+  meteor: {
+    $subscribe: {
+      'userList': []
+    },
+    categoriesList() {
+      console.log("USer", userCollection.find().fetch())
+      return userCollection.find().fetch()
+    }
   },
 
   methods: {
@@ -309,19 +326,27 @@ export default {
         lastname: null,
         email: null,
         role: null,
-      }
-      this.$refs.insertForm.reset()
+      };
+      this.$refs.insertForm.reset();
     },
 
     async insertUser() {
       try {
         console.log("[Component][insertUser] Inserting thing");
         const isValid = this.$refs.insertForm.validate();
-        if (!isValid) return
-        await UserService.insertUser(this.form.firstname, this.form.lastname, this.form.email, this.form.role);
-        this.hideInsertDialog()
+        if (!isValid) return;
+        await UserService.insertUser(
+          this.form.firstname,
+          this.form.lastname,
+          this.form.email,
+          this.form.role
+        );
+        this.hideInsertDialog();
       } catch (e) {
-        console.error("[Component][User][insertUser] An error occurred when insert user", e);
+        console.error(
+          "[Component][User][insertUser] An error occurred when insert user",
+          e
+        );
         this.showDialogError();
       }
     },
@@ -338,7 +363,6 @@ export default {
     hideDeleteDialog() {
       this.deleteDialog = false;
     },
-
 
     // Reset les champs pendant l'ajout d'un réservable
     reset() {
@@ -361,8 +385,8 @@ export default {
         }
       } catch (e) {
         console.error(
-            "[Component][User][deleteUser] An error occurred when insert user",
-            e
+          "[Component][User][deleteUser] An error occurred when insert user",
+          e
         );
         this.showDialogError();
       }
@@ -382,7 +406,7 @@ export default {
     selectUserToUpdate(item) {
       console.log(item);
       this.selectedUserToUpdate = item;
-      this.form = item
+      this.form = item;
       this.showUpdateDialog();
     },
 
@@ -398,7 +422,7 @@ export default {
         lastname: null,
         email: null,
         role: null,
-      }
+      };
     },
 
     async updateUser() {
@@ -408,8 +432,8 @@ export default {
         }
       } catch (e) {
         console.error(
-            "[Component][User][updateUser] An error occurred when insert user",
-            e
+          "[Component][User][updateUser] An error occurred when insert user",
+          e
         );
         this.showDialogError();
       }

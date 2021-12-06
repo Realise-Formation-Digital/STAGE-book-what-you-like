@@ -1,7 +1,9 @@
+import i18nnext from 'i18next'
+
 const i18nMixin = {
   methods: {
     getTranslation(key){
-      console.log("Mixin", key)
+      return i18nnext.t(key)
     }
   }
 }
