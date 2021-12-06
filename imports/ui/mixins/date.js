@@ -1,3 +1,5 @@
+import dayjs from "dayjs"
+
 const dateMixin = {
   methods: {
     getUnixTs () {
@@ -6,6 +8,9 @@ const dateMixin = {
 
     getUnixTsByDate(date){
       return new Date(date).getTime()
+    },
+    getTs (date){
+      return dayjs(date)
     }
   }
 }

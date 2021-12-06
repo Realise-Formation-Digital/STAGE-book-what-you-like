@@ -6,6 +6,7 @@ const paths = {
   user: "/user",
   category: '/category',
   reservation: '/reservation',
+  calendar: '/calendar',
 
 }
 
