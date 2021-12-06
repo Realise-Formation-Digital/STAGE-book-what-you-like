@@ -42,18 +42,17 @@ Meteor.methods({
   /**
    * Update a single category
    * @param {string} id - id to update
-   * @param {string} name - name to update
-   * @param {string} description - description to update
+   * @param {object} objectToUpdate - object that contains all the changes
    * @returns {Promise<*|undefined>}
    */
-  async updateCategory(id, name, description) {
+  async updateCategory(id, objectToUpdate) {
     try {
-      console.log('[Controller][Categories][updateCategory] Updating category with params', id, name, description)
+      console.log('[Controller][Categories][updateCategory] Updating category with params', id, objectToUpdate)
       let result = null
-      result = CategoriesModel.updateCategory(id, name, description)
+      result = CategoriesModel.updateCategory(id, objectToUpdate)
       return result
     } catch (e) {
-      console.error('[CategoriesController][updateCategory] An error occurred', e)
+      console.error('[Controller][Categories[updateCategory] An error occurred', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   }

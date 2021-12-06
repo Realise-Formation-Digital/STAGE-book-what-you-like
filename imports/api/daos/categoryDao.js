@@ -4,16 +4,16 @@ class CategoryDao {
 
   /**
    * Insert Category
-   * @param name {string} - title of the link
+   * @param title {string} - title of the link
    * @param description {string} - date of insertion
    * @param ts {number} - date of insertion
    * @returns {Promise<any>}
    */
-  static async insertCategory(name, description,  ts) {
-    console.log('[DAO][Category][insertCategory] Inserting category with params', name, description, ts)
+  static async insertCategory(title, description,  ts) {
+    console.log('[DAO][Category][insertCategory] Inserting category with params', title, description, ts)
     try {
       return CategoriesCollection.insert({
-        name: name,
+        title : title,
         description: description,
         ts: ts
       })
@@ -43,17 +43,18 @@ class CategoryDao {
   /**
    * Update a single category
    * @param {string} id - id to update
-   * @param {object} objectToUpdate - object that contains all the changes
+   * @param {object} objectToUpdate - object to update
    * @returns {Promise<any>}
    */
   static async updateCategory(id, objectToUpdate) {
     console.log('[DAO][Category][updateCategory] Updating category with params', id, objectToUpdate)
     try {
-      /*return CategoriesCollection.update({_id: id}, {
+      const {title, description } = objectToUpdate
+      return CategoriesCollection.update ({_id: id}, {
         title: title,
-        description: description
-      })*/ //todo
-    } catch (e) {
+        description: description,
+      })
+    }  catch (e) {
       console.error('[DAO][Category][updateCategory] An error occurred when updating category in database', e)
       throw new Meteor.Error('0003', 'An error occurred in dao when updating category', e.detail)
     }

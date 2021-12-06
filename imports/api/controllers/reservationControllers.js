@@ -39,22 +39,28 @@ Meteor.methods({
       result = ReservationsModel.removeReservation(id)
       return result
     } catch (e) {
-      console.error('[ReservationsController][removeReservation] An error occurred', e)
+      console.error('[Controller][Reservations][removeReservation] An error occurred', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   },
 
-  // todo update
-  // create method to modify reservation
+  
+  // Update a reservation
+ /**
+  * 
+  * @param {string} id - id to update
+  * @param {object} objectToUpdate - object that contains all the changes
+  * @returns {promise<*>}
+  */
   async updateReservation(id, objectToUpdate) {
     try {
       console.log('[Controller][Reservation][updateReservation] Removing reservation with params', id, objectToUpdate)
       let result = null
-      result = await ReservationsModel.updateReservation(title, timestampFrom, timestampTo)
+      result = await ReservationsModel.updateReservation(id, objectToUpdate)
 
       return result
     } catch (e) {
-      console.error('[ReservationsController][updateReservation] An error occurred', e)
+      console.error('[Controller][Reservations][updateReservation] An error occurred', e)
       throw new Meteor.Error(e.error, e.reason, e.details)
     }
   }
