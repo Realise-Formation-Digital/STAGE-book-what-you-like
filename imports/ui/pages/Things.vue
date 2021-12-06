@@ -322,7 +322,7 @@ export default {
     $subscribe: {
       'thingsList': []
     },
-    categoriesList() {
+    thingsList() {
       console.log("Things", thingsCollection.find().fetch())
       return thingsCollection.find().fetch()
     }
