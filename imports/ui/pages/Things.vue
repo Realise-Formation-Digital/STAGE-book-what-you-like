@@ -254,6 +254,7 @@ import ThingsService from "../services/thingsService.js";
 import i18nMixin from "../mixins/i18n";
 import dateMixin from "../mixins/date";
 import dayjs from "dayjs";
+import thingsCollection from "../collections/thingsCollection";
 
 export default {
   name: "Things",
@@ -316,6 +317,15 @@ export default {
         categoryId: [(v) => !!v || "CategoryId is required"],
       }
     };
+  },
+  meteor: {
+    $subscribe: {
+      'thingsList': []
+    },
+    categoriesList() {
+      console.log("Things", thingsCollection.find().fetch())
+      return thingsCollection.find().fetch()
+    }
   },
 
   methods: {

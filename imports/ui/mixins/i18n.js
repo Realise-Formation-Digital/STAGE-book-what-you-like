@@ -1,4 +1,4 @@
-import i18next from 'i18next'
+import i18nnext from 'i18next'
 
 const i18nMixin = {
   methods: {

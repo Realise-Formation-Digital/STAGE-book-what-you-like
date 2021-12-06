@@ -238,6 +238,8 @@ import UserService from "../services/userService.js";
 import i18nMixin from "../mixins/i18n";
 import dateMixin from "../mixins/date";
 import dayjs from "dayjs";
+import userCollection from "../collections/userCollection";
+
 export default {
   name: "User",
   mixins: [i18nMixin, dateMixin],
@@ -297,6 +299,15 @@ export default {
         role: [(v) => !!v || "Role is required"],
       },
     };
+  },
+  meteor: {
+    $subscribe: {
+      'userList': []
+    },
+    categoriesList() {
+      console.log("USer", userCollection.find().fetch())
+      return userCollection.find().fetch()
+    }
   },
 
   methods: {

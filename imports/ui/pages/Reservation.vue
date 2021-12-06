@@ -351,7 +351,6 @@
 </template>
 <script>
 import ReservationService from "../services/reservationService.js";
-
 export default {
   name: "Reservation",
   data: () => {
@@ -375,7 +374,6 @@ export default {
         required: (value) => !!value || "Required.",
         counter: (value) => value.length <= 5 || "Max 5 characters",
       },
-
       headers: [
         {
           text: "category",
@@ -420,15 +418,12 @@ export default {
       alert(JSON.stringify(item));
       console.log(item);
     },
-
     /*
     INSERT SECTION
     */
-
     showInsertDialog() {
       this.insertDialog = true;
     },
-
     hideInsertDialog() {
       this.insertDialog = false;
       this.form = {
@@ -439,16 +434,12 @@ export default {
         category: null,
       };
     },
-
     cancelInsertReservation() {
       this.hideInsertDialog();
     },
-
-
     async insertReservation() {
       try {
         console.log("Insert Reservation", this.form);
-
         await ReservationService.insertReservation(
             this.form.from,
             this.form.to,
@@ -464,25 +455,20 @@ export default {
         );
       }
     },
-
     save(date) {
       this.$refs.menu.save(date);
     },
-
     /*
     DELETE SECTION
     */
-
     selectItemToDeleteAndOpenDialog(itemToDelete) {
       this.itemToDelete = itemToDelete;
       this.dialogDelete = true;
     },
-
     closeDialogAndCleanVariables() {
       this.dialogDelete = false;
       this.itemToDelete = null;
     },
-
     async deleteSelectedItem() {
       try {
         await ReservationService.deleteReservation(this.itemToDelete.id);
@@ -494,19 +480,15 @@ export default {
         );
       }
     },
-
     /*
     UPDATE SECTION
      */
-
     showUpdateDialog() {
       this.updateDialog = true
     },
-
     hideUpdateDialog() {
       this.updateDialog = false
     },
-
     cancelUpdateReservation(){
       this.form = {
         from: null,
@@ -517,12 +499,10 @@ export default {
       };
       this.hideUpdateDialog()
     },
-
     selectItemToUpdateAndOpenDialog(item){
       this.form = item
       this.showUpdateDialog()
     },
-
     updateReservation() {
       try {
         console.log('[Components][updateReservation] Updating reservation')
@@ -531,7 +511,7 @@ export default {
         this.cancelInsertReservation()
       } catch (e) {
         console.log("[Component][Reservation][updateReservation] An error occurred when updating reservation", e)
-        
+        //todo something
       }
     }
   },
