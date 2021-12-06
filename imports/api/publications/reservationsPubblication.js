@@ -1,6 +1,6 @@
 import {Meteor} from "meteor/meteor";
 import reservationsCollection from "../collections/reservationsCollection";
 
-Meteor.publish('reservationsList', function () {
+Meteor.publish('', function () {
   return reservationsCollection.find();
 });

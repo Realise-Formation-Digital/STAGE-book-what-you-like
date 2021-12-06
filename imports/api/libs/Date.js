@@ -11,6 +11,10 @@ class Date {
         return dayjs().unix()
     }
 
+    static getTSbyDate(ISODate){
+        return dayjs(ISODate).unix()
+    }
+
 }
 
 export default Date
