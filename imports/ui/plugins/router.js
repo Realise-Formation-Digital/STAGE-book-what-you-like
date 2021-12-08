@@ -7,6 +7,7 @@ import Things from "../pages/Things";
 import User from "../pages/User";
 import Category from "../pages/Category";
 import Reservation from "../pages/Reservation";
+import Calendar from "../pages/Calendar"
 import { paths } from "../libs/defaultValues";
 
 Vue.use(VueRouter)
@@ -32,6 +33,9 @@ const routes = [
   },
   {
     path: paths.reservation, component: Reservation, name: 'Reservation'
+  },
+  {
+    path: paths.calendar, component: Calendar, name: 'Calendar'
   },
   
  

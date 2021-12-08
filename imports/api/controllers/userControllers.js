@@ -6,8 +6,8 @@ Meteor.methods({
 
     /**Create a single user
      *
-     * @param {string} firstname
-     * @param {string} lastname
+     * @param {string} firstName
+     * @param {string} lastName
      * @param {string} email
      * @param {string} role
       * @param {number} tsFrom - ts form of reservation
