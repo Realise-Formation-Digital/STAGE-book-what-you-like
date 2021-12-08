@@ -1,5 +1,5 @@
 import CategoryDao from "../daos/categoryDao";
-
+import Mail from '../libs/Mail'
 /**
  * @class
  * @classdesc Class that describe the model of Category
@@ -19,6 +19,7 @@ class CategoriesModel {
       console.log('[Model][Categories][insertCategory] Inserting category with params', name, description, ts)
       let result = null
       result = await CategoryDao.insertCategory(name, description, ts)
+      Mail.sendEmail('You have inserted a category')
       return result
     }catch (e) {
       console.error('[Model][Categories][insertCategory] An error occurred when inserting category', e)
@@ -36,6 +37,7 @@ class CategoriesModel {
       console.log('[Model][Categories][removeCategory] Removing category with params', id)
       let result = null
       result = await CategoryDao.removeCategory(id)
+      Mail.sendEmail('You have removed a category')
       return result
     }catch (e) {
       console.error('[Model][Categories][removeCategory] An error occurred when removing category', e)
@@ -54,6 +56,7 @@ class CategoriesModel {
       console.log('[Model][Categories][updateCategory] updating category with params', id)
       let result = null
       result = await CategoryDao.updateCategory(id, objectToUpdate)
+      Mail.sendEmail('You have updated a category')
       return result
     }catch (e) {
       console.error('[Model][Categories][updateCategory] An error occurred when updating category', e)

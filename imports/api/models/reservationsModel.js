@@ -1,4 +1,5 @@
 import ReservationDao from "../daos/reservationDao";
+import Mail from "../libs/Mail";
 
 /**
  * @class
@@ -23,6 +24,7 @@ class ReservationsModel {
       console.log('[Model][Reservation][insertReservation] Inserting reservation with params', userId, thingId, categoryId, title, tsFrom, tsTo)
       let result = null
       result = ReservationDao.insertReservation(userId, thingId, categoryId, title, tsFrom, tsTo, ts)
+      Mail.sendEmail('Your reservation is inserted')
       return result
     } catch (e) {
       console.error('[Model][Reservation][insertReservation] An error occurred when inserting reservation', e)
@@ -40,6 +42,7 @@ class ReservationsModel {
       console.log('[Model][Reservation][removeReservation] Removing reservation with params', id)
       let result = null
       result = await ReservationDao.removeReservation(id)
+      Mail.sendEmail('Your reservation is deleted')
       return result
     } catch (e) {
       console.error('[Model][Reservation][removeReservation] An error occurred when removing reservation', e)
@@ -58,6 +61,7 @@ class ReservationsModel {
       console.log('[Model][Reservation][updateReservation] Removing reservation with params', id, objectToUpdate)
       let result = null
       result = await ReservationDao.updateReservation(id, objectToUpdate)
+      Mail.sendEmail('You reservation is updated')
       return result
     } catch (e) {
       console.error('[Model][Reservations][updateReservation] An error occurred when updating reservation', e)
