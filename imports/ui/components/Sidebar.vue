@@ -1,4 +1,5 @@
 <template>
+
   <v-navigation-drawer
       v-model="showSideNav"
       absolute
@@ -69,6 +70,7 @@
       </v-list-item-group>
     </v-list>
   </v-navigation-drawer>
+  
 </template>
 
 <script>
