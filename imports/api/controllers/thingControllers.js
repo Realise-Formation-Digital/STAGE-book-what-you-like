@@ -21,8 +21,16 @@ Meteor.methods({
   async insertThing(name, description, reserved, serial_number, parkingType = false, hasCable, hasWhiteBoard, categoryId) {
     try {
       console.log('[Controller][Things][insertThing] Inserting reservation with params', name, description, reserved, serial_number, parkingType, hasCable, hasWhiteBoard, categoryId)
+      check(name, String)
+      check(description, String)
+      check(reserved, Boolean)
+      check(serial_number, String)
+      check(parkingType, Boolean)
+      check(hasCable, Boolean)
+      check(hasWhiteBoard, Boolean)
+      check(category, Boolean)
       let result = null
-      const ts = new Date().getTime()
+      const ts = Date.getTs()
       result = ThingModel.insertThing(name, description, reserved, serial_number, parkingType, hasCable, hasWhiteBoard, ts, categoryId)
       return result
     } catch (e) {

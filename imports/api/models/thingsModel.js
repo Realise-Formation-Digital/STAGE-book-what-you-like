@@ -10,14 +10,14 @@ class ThingsModel {
   //todo comment
 
   /**
-   * @param name {string} - title of the thing
-   * @param description {string} - description  of the thing
-   * @param reserved {Boolean} - if the thing is reserved or not
-   * @param serialNumber {string} - serial number of object
-   * @param parkingType {boolean} - if location is
-   * @param hasCable {Boolean} - if the thing need a cable
-   * @param hasWhiteBoard {Boolean} - if needed a whiteboard
-   * @param ts {number} - ts of insertion
+   * @param {string} title of the thing
+   * @param {string}description  - description  of the thing
+   * @param {Boolean}reserved  - if the thing is reserved or not
+   * @param {string} serialNumber - serial number of object
+   * @param {boolean}parkingType  - if location is
+   * @param {Boolean}hasCable  - if the thing need a cable
+   * @param {Boolean}hasWhiteBoard  - if needed a whiteboard
+   * @param {number}ts  - ts of insertion
    * @returns {Promise<*>}
    */
   static async insertThing(name, description, reserved, serialNumber, parkingType, hasCable, hasWhiteBoard, ts, categoryId) {

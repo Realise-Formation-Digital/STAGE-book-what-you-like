@@ -37,9 +37,8 @@ Meteor.methods({
     }
   },
 
-
   /** Remove a single Reservation
-   * @param {string} id
+   * @param {string} id - id to remove
    * @returns {Promise<*>}
    */
   async removeReservation(id) {
