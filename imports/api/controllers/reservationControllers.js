@@ -1,6 +1,8 @@
 import {Meteor} from 'meteor/meteor';
 import ReservationsModel from "../models/reservationsModel";
 import Date from "../libs/Date";
+import { check } from 'meteor/check';
+
 
 Meteor.methods({
 
@@ -16,9 +18,16 @@ Meteor.methods({
   async insertReservation(title, thingId, categoryId, tsFrom, tsTo) {
     try {
       console.log('[Controller][Reservation][insertReservation] Inserting reservation with params', title, thingId, categoryId, tsFrom, tsTo)
+
+      check(title, String) // title verification for insert
+      check(thingId, String) // thingId verification
+      check(categoryId, String) // categoryId verification
+      check(tsfrom, Number)// tsFrom verification
+      check(tsTo, Number)// tsTo verification
+
       let result = null
       const userId = null
-      const ts = Date.getTs()
+      const ts = Date.getTs();
       tsFrom = Date.getTSbyDate(tsFrom)
       tsTo = Date.getTSbyDate(tsTo)
       result = ReservationsModel.insertReservation(userId, thingId, categoryId, title, tsFrom, tsTo, ts)
@@ -38,6 +47,7 @@ Meteor.methods({
   async removeReservation(id) {
     try {
       console.log('[Controller][Reservation][removeReservation] Removing reservation with params', id)
+      check(id, String) // id verification to remove a reservation
       let result = null
       result = ReservationsModel.removeReservation(id)
       return result
@@ -48,9 +58,9 @@ Meteor.methods({
   },
 
   
-  // Update a reservation
+
  /**
-  * 
+  * Update a reservation
   * @param {string} id - id to update
   * @param {object} objectToUpdate - object that contains all the changes
   * @returns {promise<*>}
@@ -58,6 +68,8 @@ Meteor.methods({
   async updateReservation(id, objectToUpdate) {
     try {
       console.log('[Controller][Reservation][updateReservation] Removing reservation with params', id, objectToUpdate)
+      check(id, String) // id verification to update a reservation
+      check(objectToUpdate, Object)//object verification for update
       let result = null
       result = await ReservationsModel.updateReservation(id, objectToUpdate)
 

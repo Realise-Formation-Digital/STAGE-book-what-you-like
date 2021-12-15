@@ -1,4 +1,5 @@
 import ThingDao from "../daos/thingDao";
+import Mail from "../libs/Mail";
 
 /**
  * @class
@@ -23,6 +24,7 @@ class ThingsModel {
     try {
       console.log('[Model][Things][insertThing] Inserting reservation with params', name, description, reserved, serialNumber, parkingType, hasCable, hasWhiteBoard, ts, categoryId)
       let result = null
+
       result = ThingDao.insertThing(name, description, reserved, serialNumber, parkingType, hasCable, hasWhiteBoard, ts, categoryId)
       return result
     } catch (e) {
