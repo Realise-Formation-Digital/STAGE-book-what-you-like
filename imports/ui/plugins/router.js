@@ -7,8 +7,9 @@ import Things from "../pages/Things";
 import User from "../pages/User";
 import Category from "../pages/Category";
 import Reservation from "../pages/Reservation";
+import Calendar from "../pages/Calendar"
 import { paths } from "../libs/defaultValues";
-import Calendar from "../pages/Calendar";
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -35,7 +36,9 @@ const routes = [
   },
   {
     path: paths.calendar, component: Calendar, name: 'Calendar'
-  }
+  },
+  
+ 
 ]
 
 export default new VueRouter({

@@ -5,10 +5,10 @@
       <v-row>
         <v-col>
           <v-btn
-              rounded
-              large
-              color="green darken-1 white--text"
-              @click="showInsertDialog()"
+            rounded
+            large
+            color="green darken-1 white--text"
+            @click="showInsertDialog()"
           >
             <v-icon left>mdi-plus</v-icon>
             Reservation
@@ -21,11 +21,11 @@
         <v-col md="6"></v-col>
         <v-col md="6">
           <v-text-field
-              v-model="search"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
           ></v-text-field>
         </v-col>
       </v-row>
@@ -33,11 +33,11 @@
       <v-row>
         <v-col>
           <v-data-table
-              :headers="headers"
-              :items="reservationsList"
-              :search="search"
-              :items-per-page="5"
-              class="elevation-1"
+            :headers="headers"
+            :items="reservationsList"
+            :search="search"
+            :items-per-page="5"
+            class="elevation-1"
           >
             <div class="mb-6">
               Active picker: <code>{{ activePicker || "null" }}</code>
@@ -45,16 +45,17 @@
             <template v-slot:item.actions="{ item }">
               <v-btn icon color="orange">
                 <v-icon
-                    icon
-                    color="orange"
-                    @click="selectItemToUpdateAndOpenDialog(item)">
+                  icon
+                  color="orange"
+                  @click="selectItemToUpdateAndOpenDialog(item)"
+                >
                   mdi-pencil
                 </v-icon>
               </v-btn>
               <v-btn
-                  icon
-                  color="red"
-                  @click="selectItemToDeleteAndOpenDialog(item)"
+                icon
+                color="red"
+                @click="selectItemToDeleteAndOpenDialog(item)"
               >
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
@@ -67,26 +68,25 @@
       <v-dialog v-model="dialogDelete" max-width="600px">
         <v-card>
           <v-card-title class="text-h5"
-          >Are you sure you want to delete the category
+            >Are you sure you want to delete the category
             {{ itemToDelete && itemToDelete.category }}?
-          </v-card-title
-          >
+          </v-card-title>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
-                color="red darken-1 white--text"
-                large
-                rounded
-                @click="cancelInsertReservation()"
+              color="red darken-1 white--text"
+              large
+              rounded
+              @click="cancelInsertReservation()"
             >
               <v-icon left> mdi-close</v-icon>
               Cancel
             </v-btn>
             <v-btn
-                color="green darken-1 white--text"
-                large
-                rounded
-                @click="deleteSelectedItem()"
+              color="green darken-1 white--text"
+              large
+              rounded
+              @click="deleteSelectedItem()"
             >
               <v-icon left>mdi-check</v-icon>
               Cancel
@@ -103,101 +103,129 @@
           <v-card-title class="text-h5">Insert Reservation</v-card-title>
           <v-card-text>
             <v-container>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
-                        v-model="form.thinks"
-                        label="things*"
-                        required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                        v-model="form.user"
-                        label="user*"
-                        type="user"
-                        required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                        v-model="form.category"
-                        label="category*"
-                        type="category"
-                        required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-menu
-                        ref="menu"
-                        v-model="menuFrom"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                            v-model="form.from"
-                            label="From"
-                            prepend-icon="mdi-calendar"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                          v-model="form.from"
+              <v-row>
+                <v-col cols="12">
+                  <v-select
+                  
+                   :items=" thingsList"
+                    v-model="form.thinks"
+                    :menu-props="{ top: true, offsetY: true }"
+                    label="things*"
+                    required
+                  ></v-select>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="form.user"
+                    label="user*"
+                    type="user"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="form.category"
+                    label="category*"
+                    type="category"
+                    required
+                  ></v-text-field>
+                </v-col>
+                
+
+                <v-col cols="12">
+                  <v-menu
+                    ref="menu"
+                    v-model="menuFrom"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="form.from"
+                        label="From"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                      <!-- Time Picker From -->
+
+                      <v-col style="width: 350px; flex: 0 1 auto">
+                        <h2>Start:</h2>
+                        <v-time-picker
+                          v-model="start"
+                          :min="end"
                           :active-picker.sync="activePicker"
                           @change="save"
-                      ></v-date-picker>
-                    </v-menu>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-menu
-                        ref="menu"
-                        v-model="menuTo"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                            v-model="form.to"
-                            label="To"
-                            prepend-icon="mdi-calendar"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                          v-model="form.to"
+                        >
+                        </v-time-picker>
+                      </v-col>
+                    </template>
+                    <v-date-picker
+                      v-model="form.from"
+                      :active-picker.sync="activePicker"
+                      @change="save"
+                    ></v-date-picker>
+                  </v-menu>
+                </v-col>
+                <v-col cols="12">
+                  <v-menu
+                    ref="menu"
+                    v-model="menuTo"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="form.to"
+                        label="To"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                      <!-- Time Picker to -->
+                      <v-col style="width: 350px; flex: 0 1 auto">
+                        <h2>End:</h2>
+                        <v-time-picker
+                          v-model="end"
+                          :max="start"
                           :active-picker.sync="activePicker"
                           @change="save"
-                      ></v-date-picker>
-                    </v-menu>
-                  </v-col>
-                </v-row>
+                        >
+                        </v-time-picker>
+                      </v-col>
+                    </template>
+                    <v-date-picker
+                      v-model="form.to"
+                      :active-picker.sync="activePicker"
+                      @change="save"
+                    ></v-date-picker>
+                  </v-menu>
+                </v-col>
+              </v-row>
             </v-container>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
-                color="red darken-1 white--text"
-                large
-                rounded
-                @click="cancelInsertReservation()"
+              color="red darken-1 white--text"
+              large
+              rounded
+              @click="cancelInsertReservation()"
             >
               <v-icon left>mdi-close</v-icon>
               Cancel
             </v-btn>
             <v-btn
-                color="green darken-1 white--text"
-                large
-                rounded
-                @click="insertReservation()"
+              color="green darken-1 white--text"
+              large
+              rounded
+              @click="insertReservation()"
             >
               <v-icon left>mdi-check</v-icon>
               Insert
@@ -212,101 +240,101 @@
           <v-card-title class="text-h5">Update Reservation</v-card-title>
           <v-card-text>
             <v-container>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
-                        v-model="form.things"
-                        label="things*"
-                        required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                        v-model="form.user"
-                        label="user*"
-                        type="user"
-                        required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                        v-model="form.category"
-                        label="category*"
-                        type="category"
-                        required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-menu
-                        ref="menu"
-                        v-model="menuFrom"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                            v-model="form.from"
-                            label="From"
-                            prepend-icon="mdi-calendar"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                          v-model="form.from"
-                          :active-picker.sync="activePicker"
-                          @change="save"
-                      ></v-date-picker>
-                    </v-menu>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-menu
-                        ref="menu"
-                        v-model="menuTo"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        min-width="auto"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                            v-model="form.to"
-                            label="To"
-                            prepend-icon="mdi-calendar"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                          v-model="form.to"
-                          :active-picker.sync="activePicker"
-                          @change="save"
-                      ></v-date-picker>
-                    </v-menu>
-                  </v-col>
-                </v-row>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="form.things"
+                    label="things*"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="form.user"
+                    label="user*"
+                    type="user"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="form.category"
+                    label="category*"
+                    type="category"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-menu
+                    ref="menu"
+                    v-model="menuFrom"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="form.from"
+                        label="From"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
+                      v-model="form.from"
+                      :active-picker.sync="activePicker"
+                      @change="save"
+                    ></v-date-picker>
+                  </v-menu>
+                </v-col>
+                <v-col cols="12">
+                  <v-menu
+                    ref="menu"
+                    v-model="menuTo"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="form.to"
+                        label="To"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
+                      v-model="form.to"
+                      :active-picker.sync="activePicker"
+                      @change="save"
+                    ></v-date-picker>
+                  </v-menu>
+                </v-col>
+              </v-row>
             </v-container>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
-                color="red darken-1 white--text"
-                large
-                rounded
-                @click="cancelUpdateReservation()"
+              color="red darken-1 white--text"
+              large
+              rounded
+              @click="cancelUpdateReservation()"
             >
               <v-icon left>mdi-close</v-icon>
               Cancel
             </v-btn>
             <v-btn
-                color="green darken-1 white--text"
-                large
-                rounded
-                @click="updateReservation()"
+              color="green darken-1 white--text"
+              large
+              rounded
+              @click="updateReservation()"
             >
               <v-icon left> mdi-check</v-icon>
               Update
@@ -327,6 +355,9 @@ export default {
   data: () => {
     return {
       search: "",
+      start: null,
+      end: null,
+
       insertDialog: false,
       dialogDelete: false,
       updateDialog: false,
@@ -353,33 +384,33 @@ export default {
           sortable: false,
           value: "categoryId",
         },
-        {text: "things", value: "thingId"},
-        {text: "user", value: "user"},
-        {text: "from", value: "tsFrom"},
-        {text: "to", value: "tsTo"},
-        {text: "Actions", value: "actions", sortable: false},
+        { text: "things", value: "thingId" },
+        { text: "user", value: "user" },
+        { text: "from", value: "tsFrom" },
+        { text: "to", value: "tsTo" },
+        { text: "Actions", value: "actions", sortable: false },
       ],
       itemToDelete: null,
     };
   },
   meteor: {
     $subscribe: {
-      'categoriesList': [],
-      'reservationsList': [],
-      'thingsList': []
+      categoriesList: [],
+      reservationsList: [],
+      thingsList: [],
     },
     categoriesList() {
-      console.log("Categories", categoriesCollection.find().fetch())
-      return categoriesCollection.find().fetch()
+      console.log("Categories", categoriesCollection.find().fetch());
+      return categoriesCollection.find().fetch();
     },
     reservationsList() {
-      console.log("Reservations", reservationsCollection.find().fetch())
-      return reservationsCollection.find().fetch()
+      console.log("Reservations", reservationsCollection.find().fetch());
+      return reservationsCollection.find().fetch();
     },
     thingsList() {
-      console.log("Things", thingsCollection.find().fetch())
-      return thingsCollection.find().fetch()
-    }
+      console.log("Things", thingsCollection.find().fetch());
+      return thingsCollection.find().fetch();
+    },
   },
   methods: {
     async deleteItemConfirm(item) {
@@ -409,18 +440,18 @@ export default {
       try {
         console.log("Insert Reservation", this.form);
         await ReservationService.insertReservation(
-            'title',
-            this.form.from,
-            this.form.to,
-            this.form.thinks,
-            this.form.user,
-            this.form.category
+          "title",
+          this.form.from,
+          this.form.to,
+          this.form.thinks,
+          this.form.user,
+          this.form.category
         );
         this.hideInsertDialog(true);
       } catch (e) {
         console.error(
-            "[Component][Reservation][insertSaveReservation] An error occurred when inert reservation",
-            e
+          "[Component][Reservation][insertSaveReservation] An error occurred when inert reservation",
+          e
         );
       }
     },
@@ -444,8 +475,8 @@ export default {
         this.closeDialogAndCleanVariables();
       } catch (e) {
         console.error(
-            "[Component][Reservation][deleteSelectedItem] An error occurred when inert reservation",
-            e
+          "[Component][Reservation][deleteSelectedItem] An error occurred when inert reservation",
+          e
         );
       }
     },
@@ -453,12 +484,12 @@ export default {
     UPDATE SECTION
      */
     showUpdateDialog() {
-      this.updateDialog = true
+      this.updateDialog = true;
     },
     hideUpdateDialog() {
-      this.updateDialog = false
+      this.updateDialog = false;
     },
-    cancelUpdateReservation(){
+    cancelUpdateReservation() {
       this.form = {
         from: null,
         to: null,
@@ -466,23 +497,26 @@ export default {
         user: null,
         category: null,
       };
-      this.hideUpdateDialog()
+      this.hideUpdateDialog();
     },
-    selectItemToUpdateAndOpenDialog(item){
-      this.form = item
-      this.showUpdateDialog()
+    selectItemToUpdateAndOpenDialog(item) {
+      this.form = item;
+      this.showUpdateDialog();
     },
     updateReservation() {
       try {
-        console.log('[Components][updateReservation] Updating reservation')
-        let result = null
-        result = ReservationService.updateReservation(this.form.id, this.form)
-        this.cancelInsertReservation()
+        console.log("[Components][updateReservation] Updating reservation");
+        let result = null;
+        result = ReservationService.updateReservation(this.form.id, this.form);
+        this.cancelInsertReservation();
       } catch (e) {
-        console.log("[Component][Reservation][updateReservation] An error occurred when updating reservation", e)
+        console.log(
+          "[Component][Reservation][updateReservation] An error occurred when updating reservation",
+          e
+        );
         //todo something
       }
-    }
+    },
   },
 };
 </script>

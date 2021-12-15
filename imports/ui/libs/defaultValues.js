@@ -25,6 +25,11 @@ const meteorMethods = {
     insert:'insertThing',
     update:'updateThing',
     delete:'removeThing'
+  },
+  user: {
+    insert:'insertUser',
+    update:'updateUser',
+    delete:'removeUser'
   }
 }
 
