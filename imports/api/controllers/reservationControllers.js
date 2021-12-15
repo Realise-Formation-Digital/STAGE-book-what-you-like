@@ -19,8 +19,8 @@ Meteor.methods({
       let result = null
       const userId = null
       const ts = Date.getTs()
-      tsFrom = Date.getTSbyDate(tsFrom)
-      tsTo = Date.getTSbyDate(tsTo)
+      //tsFrom = Date.getTSbyDate(tsFrom)
+      //tsTo = Date.getTSbyDate(tsTo)
       result = ReservationsModel.insertReservation(userId, thingId, categoryId, title, tsFrom, tsTo, ts)
       return result
     } catch (e) {

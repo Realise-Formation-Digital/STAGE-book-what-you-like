@@ -36,7 +36,7 @@
         <v-data-table
             class="margin-left margin-right"
             :headers="headers"
-            :items="reservable"
+            :items="thingsList"
             :search="search"
         >
           <template v-slot:item.action="{ item }">
@@ -289,23 +289,6 @@ export default {
         {text: "CategoryId", value: "categoryId"},
         {text: "ts", value: "ts"},
         {text: "Action ", value: "action"},
-      ],
-      // Les reservables
-      reservable: [
-        {
-          name: "Davide",
-          serialNumber: "1213",
-          description: " asdbhasda",
-          reserved: true,
-          categoryId: "234",
-        },
-        {
-          name: "Dawit",
-          serialNumber: "4321",
-          description: "dawit thing",
-          reserved: true,
-          categoryId: "12345",
-        }
       ],
       // Les obligations pour ajouter un réservable
       valid: true,

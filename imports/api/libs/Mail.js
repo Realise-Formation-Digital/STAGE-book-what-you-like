@@ -40,7 +40,7 @@ class Mail {
         this.mailInstance.send({
             to: 'marco.tribuz@gmail.com',
             from: 'testemail.realise@gmail.com',
-            subject: 'Email Test',
+            subject: 'Reservation',
             text: message,
         })
     }

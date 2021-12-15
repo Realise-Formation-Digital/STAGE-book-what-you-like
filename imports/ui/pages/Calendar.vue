@@ -29,7 +29,7 @@
             ref="calendar"
             v-model="focus"
             color="primary"
-            type="month"
+            type="week"
             :events="events"
             :event-color="getEventColor"
           ></v-calendar>
@@ -45,8 +45,10 @@
 import categoriesCollection from "../collections/categoriesCollection";
 import reservationsCollection from "../collections/reservationsCollection";
 import thingsCollection from "../collections/thingsCollection";
+import dateMixin from "../mixins/date";
 
 export default {
+  mixins: [dateMixin],
   data: () => ({
     focus: "",
     events: [],
@@ -105,15 +107,19 @@ export default {
 
       const listReservation = reservationsCollection.find().fetch();
       for (let i = 0; i < listReservation.length; i++) {
+
+        console.log(this.getDateFromUnixTs(listReservation[i].tsFrom * 1000))
+
         events.push({
-          name: "Davide",
-          start: new Date(listReservation[i].tsFrom * 1000),
-          end: new Date(listReservation[i].tsTo * 1000),
+          name: listReservation[i].title,
+          start: this.getDateFromUnixTs(listReservation[i].tsFrom * 1000),
+          end: this.getDateFromUnixTs(listReservation[i].tsTo * 1000),
           color: "blue",
         });
       }
 
       this.events = events;
+      console.log("Events", events)
       return reservationsCollection.find().fetch();
     },
     thingsList() {

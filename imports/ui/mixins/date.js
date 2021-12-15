@@ -9,8 +9,17 @@ const dateMixin = {
     getUnixTsByDate(date){
       return new Date(date).getTime()
     },
+
     getTs (date){
       return dayjs(date)
+    },
+
+    getUnixTsFromDate(date) {
+      return dayjs(date).unix()
+    },
+
+    getDateFromUnixTs(ts) {
+      return dayjs(ts).format('YYYY-MM-DD HH:MM')
     }
   }
 }
