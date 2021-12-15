@@ -1,12 +1,13 @@
 import {Meteor} from 'meteor/meteor';
 import ReservationsModel from "../models/reservationsModel";
-import Date from "../libs/Date.js";
+import Date from "../libs/Date";
 import { check } from 'meteor/check';
 
 
 Meteor.methods({
 
-  /**Insert a single reservation
+  /**
+   * Insert a single reservation
    * @param {string} title - Title of reservation
    * @param {string} thingId - thing to reserve
    * @param {string} categoryId - category to reserve
@@ -17,7 +18,7 @@ Meteor.methods({
   async insertReservation(title, thingId, categoryId, tsFrom, tsTo) {
     try {
       console.log('[Controller][Reservation][insertReservation] Inserting reservation with params', title, thingId, categoryId, tsFrom, tsTo)
-      
+
       check(title, String) // title verification for insert
       check(thingId, String) // thingId verification
       check(categoryId, String) // categoryId verification
@@ -27,6 +28,8 @@ Meteor.methods({
       let result = null
       const userId = null
       const ts = Date.getTs();
+      tsFrom = Date.getTSbyDate(tsFrom)
+      tsTo = Date.getTSbyDate(tsTo)
       result = ReservationsModel.insertReservation(userId, thingId, categoryId, title, tsFrom, tsTo, ts)
       return result
     } catch (e) {
@@ -36,7 +39,8 @@ Meteor.methods({
   },
 
 
-  /** Remove a single Reservation
+  /**
+   * Remove a single Reservation
    * @param {string} id
    * @returns {Promise<*>}
    */
@@ -55,7 +59,8 @@ Meteor.methods({
 
   
 
- /**Update a reservation
+ /**
+  * Update a reservation
   * @param {string} id - id to update
   * @param {object} objectToUpdate - object that contains all the changes
   * @returns {promise<*>}
@@ -64,7 +69,7 @@ Meteor.methods({
     try {
       console.log('[Controller][Reservation][updateReservation] Removing reservation with params', id, objectToUpdate)
       check(id, String) // id verification to update a reservation
-      check(objectToUpdate, Object)//object verification for update 
+      check(objectToUpdate, Object)//object verification for update
       let result = null
       result = await ReservationsModel.updateReservation(id, objectToUpdate)
 

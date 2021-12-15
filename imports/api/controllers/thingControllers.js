@@ -1,4 +1,4 @@
-import { Meteor } from 'meteor/meteor';
+import {Meteor} from 'meteor/meteor';
 import ThingModel from "../models/thingsModel";
 import Date from "../libs/Date.js";
 import { check } from 'meteor/check';
@@ -6,8 +6,9 @@ import { check } from 'meteor/check';
 
 Meteor.methods({
 
-
-  /**Create a single thing
+  
+  /**
+   * Create a single thing
    * @param {string} name
    * @param {string} description
    * @param {boolean} reserved
@@ -15,9 +16,10 @@ Meteor.methods({
    * @param {boolean} parkingType
    * @param {boolean} hasCable
    * @param {boolean} hasWhiteBoard
+   * @param {string} categoryId - category id's thing
    * @returns {Promise<*>}
    */
-  async insertThing(name, description, reserved, serial_number, parkingType = null, hasCable, hasWhiteBoard) {
+  async insertThing(name, description, reserved, serial_number, parkingType = false, hasCable, hasWhiteBoard, categoryId) {
     try {
       console.log('[Controller][Things][insertThing] Inserting reservation with params', name, description, reserved, serial_number, parkingType, hasCable, hasWhiteBoard)
 
@@ -39,7 +41,8 @@ Meteor.methods({
     }
   },
 
-  /**Removing a single reservation
+  /**
+   * Removing a single reservation
    * @param {string} id
    * @returns
    */
@@ -57,7 +60,8 @@ Meteor.methods({
   },
 
  
-  /**update a single thing
+  /**
+   * Update a single thing
    * @param {string} id - id to update
    * @param {object} objectToUpdate - object that contains all the changes
    * @returns {promise<*>}
@@ -66,7 +70,7 @@ Meteor.methods({
     try {
       console.log('[Controller][Things][updateThing] Updating thing with params', id, objectToUpdate)
       check(id, String)// id verification to update a thing
-      check(objectToUpdate, Object)// object verification 
+      check(objectToUpdate, Object)// object verification
       let result = null
       result = ThingModel.updateThing(id, objectToUpdate)
       return result

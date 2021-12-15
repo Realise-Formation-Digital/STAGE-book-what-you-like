@@ -59,6 +59,12 @@
           </v-list-item-icon>
           <v-list-item-title>Reservation</v-list-item-title>
         </v-list-item>
+        <v-list-item link :to="paths.calendar">
+          <v-list-item-icon>
+            <v-icon>mdi-card-account-mail</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Calendar</v-list-item-title>
+        </v-list-item>
 
       </v-list-item-group>
     </v-list>
