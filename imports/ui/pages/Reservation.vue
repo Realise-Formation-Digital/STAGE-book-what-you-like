@@ -39,9 +39,6 @@
               :items-per-page="5"
               class="elevation-1"
           >
-            <div class="mb-6">
-              Active picker: <code>{{ activePicker || "null" }}</code>
-            </div>
             <template v-slot:item.actions="{ item }">
               <v-btn icon color="orange">
                 <v-icon
@@ -59,6 +56,15 @@
               >
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
+            </template>
+            <template v-slot:item.thingId="{ item }">
+              {{ getThingName(item.thingId) }}
+            </template>
+            <template v-slot:item.tsFrom="{ item }">
+              {{getTs(item.tsFrom * 1000)}}
+            </template>
+            <template v-slot:item.tsTo="{ item }">
+              {{getTs(item.tsTo * 1000)}}
             </template>
           </v-data-table>
         </v-col>
@@ -203,6 +209,7 @@
                     <v-time-picker
                         v-if="menuTimeFrom"
                         v-model="start"
+                        format="24hr"
                         full-width
                         @click:minute="$refs.menuTimeFrom.save(start)"
                     ></v-time-picker>
@@ -259,7 +266,7 @@
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
                           v-model="end"
-                          label="Picker in menu"
+                          label="Hours End"
                           prepend-icon="mdi-clock-time-four-outline"
                           readonly
                           v-bind="attrs"
@@ -269,7 +276,9 @@
                     <v-time-picker
                         v-if="menuTimeTo"
                         v-model="end"
+                        :min="start"
                         full-width
+                        format="24hr"
                         @click:minute="$refs.menuTimeTo.save(end)"
                     ></v-time-picker>
                   </v-menu>
@@ -512,14 +521,18 @@ export default {
     cancelInsertReservation() {
       this.hideInsertDialog();
     },
+
+    getThingName (id) {
+      const thingFound = this.thingsList.find((t) => t._id === id)
+      return thingFound && thingFound.name || "Undefined"
+    },
+
     async insertReservation() {
       try {
         console.log("Insert Reservation", this.form, this.end, this.start);
 
         const dateFrom = this.getUnixTsFromDate(this.form.from + " " + this.start + ":00")
         const dateTo = this.getUnixTsFromDate(this.form.to + " " + this.end + ":00")
-
-        console.log("Date", dateFrom, dateTo)
 
         await ReservationService.insertReservation(
             this.form.title,
